@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="../app/src/styles.css"></link>
+        <title>Icosahedron</title>
+    </head>
+    <body>
+        <div id="particles-js" class="particles-js"></div>
+        <div class="screen-center" id="input"></div>
+        <div class="player-info" id="player-info"></div>
+        <div id="stats"></div>
+
+        <!-- Load dependencies -->
+        <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script> <!-- particles.js library -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/17.1.1/Tween.min.js"></script> <!-- JS Tween library -->
+        <script src="../lib/stats/stats.js"></script> <!-- Stats library -->
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/88/three.min.js"></script> <!-- three.js base library -->
+        <script src="../lib/three/EffectComposer.js"></script>
+        <script src="../lib/three/DotScreenShader.js"></script>
+        <script src="../lib/three/RGBShiftShader.js"></script>
+        <script src="../lib/three/CopyShader.js"></script>
+        <script src="../lib/three/ShaderPass.js"></script>
+        <script src="../lib/three/RenderPass.js"></script>
+        <script src="../lib/three/MaskPass.js"></script>
+        <script src="../lib/three/GlitchPass.js"></script>
+        <script src="../lib/three/ClearPass.js"></script>
+        <script src="../lib/three/DigitalGlitch.js"></script>
+        <script src="../lib/three/OrbitControls.js"></script>
+        <script src="../lib/three/Projector.js"></script>
+        <script src="../lib/three/CanvasRenderer.js"></script>
+
+        <!-- JS Stylesheet -->
+        <script src="./styles.js"></script>
+        <!-- React.js input -->
+        <script src="./main.js"></script>
+        <!-- Particles.js background -->
+        <!--<script src="./ambient_constellation.js"></script>-->
+        <!-- Three.js shape background -->
+        <!--<script src="./ambient_shape.js"></script>-->
+        <!-- Three.js sphere background -->
+        <script src="./ambient_sphere.js"></script>
+
+        <center class="small-font">
+            <p>Terms of Service</p>
+            <p>Privacy Policy</p>
+            <p>► © 2019 Brandon Cho. All rights reserved.</p>
+        </center>
+    </body>
+</html>
