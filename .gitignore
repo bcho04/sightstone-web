@@ -1,7 +1,7 @@
 .DS_Store
 .babelrc
-webpack.config.js
-src/web/build/**
 node_modules
 src/server/config.json
 src/server/cert/**
+src/data
+src/server/test.js

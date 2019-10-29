@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css?family=Exo+2|Cairo");
+
+/*
+<<   General HTML   >>
+                    */
+
+html, body {
+    font-family: "Exo 2", sans-serif;
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: black;
+}
+
+.small-font {
+    font-size: 12px;
+    color: #888888;
+}
+
+.inline {
+    display: inline;
+}
