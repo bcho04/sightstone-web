@@ -1,7 +1,9 @@
 .DS_Store
-.babelrc
 node_modules
 src/server/config.json
 src/server/cert/**
 src/data
 src/server/test.js
+**/__pycache__
+src/web/dist
+package-lock.json

@@ -15,34 +15,33 @@
     "react-dom": "^16.11.0",
     "redux": "^4.0.4",
     "request": "^2.88.0",
+    "three": "^0.109.0",
     "xregexp": "^4.2.4"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-env": "^2.4.1",
+    "@babel/cli": "^7.6.4",
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.6.0",
+    "@babel/plugin-proposal-function-bind": "^7.2.0",
+    "@babel/plugin-transform-react-constant-elements": "^7.6.3",
+    "@babel/plugin-transform-react-inline-elements": "^7.2.0",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-react": "^7.6.3",
+    "@babel/preset-stage-0": "^7.0.0",
     "babel-loader": "^8.0.6",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
     "css-loader": "^3.2.0",
-    "extract-text-webpack-plugin": "^3.0.2",
+    "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "json-loader": "^0.5.7",
+    "mini-css-extract-plugin": "^0.8.0",
     "style-loader": "^1.0.0",
-    "webpack": "^4.41.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9",
     "webpack-combine-loaders": "^2.0.4",
-    "webpack-dev-server": "^3.8.2"
-  },
-  "scripts": {
-    "build": "webpack"
+    "webpack-dev-server": "^3.9.0"
   },
   "author": "Brandon Cho",
   "license": "CC-BY-NC-ND-4.0",
-  "description": "A League of Legends statistical analyzer.",
-  "keywords": [
-    "leagueoflegends",
-    "javascript"
-  ]
+  "description": "A League of Legends statistical analyzer."
 }
