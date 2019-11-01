@@ -49,11 +49,14 @@ store.dispatch({type: "SET_US", username: (url.searchParams.get("username") || "
 /* FEBE definition */
 
 class FEBE {
-    static get(server, username, options = {}){
+    static request(options){
         return new Promise((resolve, reject) => {
-            let uri = "http://127.0.0.1:8080/summoner/get/?";
-            uri += "server=" + server + "&";
-            uri += "username=" + username;
+            options.type = options.type == null ? "get" : options.type;
+
+            let uri = "http://127.0.0.1:8080/v1/summoner/" + options.type + "?";
+            uri += "server=" + options.server + "&";
+            uri += "username=" + options.username;
+
             request.get(uri, (err, response, body) => {
                 if(err) return reject(err);
                 body = JSON.parse(body);
@@ -273,21 +276,26 @@ class NameForm extends React.Component {
 
     handleSubmit(event){
         if(window.onLine || navigator.onLine){
-          FEBE.get(this.state.server, this.state.name).then((body) => {
-              console.log(body);
-              let serverName;
-              Object.keys(serverLookup).forEach((key) => {
-                  if(serverLookup[key] == this.state.server) serverName = key;
-              });
-              store.dispatch({type: "SET_US", username: this.state.name, server: serverName.toUpperCase()});
-              this.setState({classes: "hide"});
-              window.dispatchEvent(new Event("sumsubmit"));
-          }).catch((error) => {
-              if(error == 404) alert("Username not found in server. Please check your username spelling and server and try again.");
-              else if(error == 500) alert("There was a server-side error.");
-              else alert("There was an error while attempting this search. Please check your username and server and try again.");
+            let request_options = {
+                server: this.state.server,
+                username: this.state.name,
+                type: "get"
+            };
 
-          });
+            FEBE.request(request_options).then((body) => {
+                console.log(body);
+                let serverName;
+                Object.keys(serverLookup).forEach((key) => {
+                    if(serverLookup[key] == this.state.server) serverName = key;
+                });
+                store.dispatch({type: "SET_US", username: this.state.name, server: serverName.toUpperCase()});
+                this.setState({classes: "hide"});
+                window.dispatchEvent(new Event("sumsubmit"));
+            }).catch((error) => {
+                if(error == 404) alert("Username not found in server. Please check your username spelling and server and try again.");
+                else if(error == 500) alert("There was a server-side error.");
+                else alert("There was an error while attempting this search. Please check your username and server and try again.");
+            });
         } else {
             alert("You are offline. Please reconnect to search.");
         }

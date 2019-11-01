@@ -37,7 +37,7 @@ html, body {
 .player-info {
     position: absolute;
     width: 100%;
-    height: 0px; /* Don't push the canvas down. */
+    top: 0px; /* Don't push the canvas down. */
     z-index: 1;
 }
 
@@ -126,11 +126,9 @@ input[type="text"], textarea {
 }
 
 .name-header {
-    font-size: 48px;
-    color: black;
+    color: #9f9f9f;
 }
 
 .name-text {
-    font-size: 36px;
-    color: black;
+    color: #9f9f9f;
 }
