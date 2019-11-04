@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-    mode: "production",
+    mode: "development",
     entry: path.resolve(__dirname, "src", "web", "app", "index.js"),
     output: {
         // options related to how webpack emits results
@@ -17,8 +17,12 @@ module.exports = {
             {
                 test: /\.(js|jsx)?$/,
                 include: [
+                  path.resolve(__dirname, "src", "web", "actions"),
                   path.resolve(__dirname, "src", "web", "app"),
-                  path.resolve(__dirname, "src", "web", "lib", "**")
+                  path.resolve(__dirname, "src", "web", "components"),
+                  path.resolve(__dirname, "src", "web", "containers"),
+                  path.resolve(__dirname, "src", "web", "methods"),
+                  path.resolve(__dirname, "src", "web", "reducers")
                 ],
                 exclude: /node_modules/,
                 loader: "babel-loader",
@@ -36,7 +40,7 @@ module.exports = {
             {
                 test: /\.css?$/,
                 include: [
-                  path.resolve(__dirname, "src", "web", "app")
+                  path.resolve(__dirname, "src", "web", "style")
                 ],
                 use: ["style-loader", "css-loader"]
             }
