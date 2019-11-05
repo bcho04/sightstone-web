@@ -1,5 +1,7 @@
 {
   "name": "rubidium-web",
+  "author": "Brandon Cho",
+  "description": "A League of Legends statistical analyzer.",
   "version": "1.0.0",
   "main": "./src/server/server.js",
   "dependencies": {
@@ -42,8 +44,5 @@
     "webpack-cli": "^3.3.9",
     "webpack-combine-loaders": "^2.0.4",
     "webpack-dev-server": "^3.9.0"
-  },
-  "author": "Brandon Cho",
-  "license": "CC-BY-NC-ND-4.0",
-  "description": "A League of Legends statistical analyzer."
+  }
 }
