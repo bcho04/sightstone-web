@@ -1,9 +1,3 @@
 .DS_Store
 node_modules
-src/server/config-dev.json
-src/server/cert
-src/data
-src/server/test.js
-**/__pycache__
-src/web/dist
-package-lock.json
+dist

@@ -31,10 +31,12 @@ class Background extends React.Component {
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
         document.getElementById("background").appendChild( renderer.domElement );
+        // background
+        scene.background = new THREE.Color( 0xffffff )
         // particles
         var PI2 = Math.PI * 2;
         var material = new THREE.SpriteMaterial( {
-            color: 0xffffff,
+            color: 0x000000,
             program: function ( context ) {
                 context.beginPath();
                 context.arc( 0, 0, 0.5, 0, PI2, true );
@@ -61,7 +63,7 @@ class Background extends React.Component {
             var vertex2 = vertex.clone();
             vertex2.multiplyScalar( Math.random() * 0.3 + 1 );
             geometry.vertices.push( vertex2 );
-            var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0xffffff, opacity: Math.random() } ) );
+            var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0x000000, opacity: Math.random() } ) );
             scene.add( line );
         }
         document.addEventListener( 'mousemove', this.onDocumentMouseMove, false );

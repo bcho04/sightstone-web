@@ -4,10 +4,10 @@ const webpack = require('webpack');
 
 module.exports = {
     mode: "development",
-    entry: path.resolve(__dirname, "src", "web", "app", "index.js"),
+    entry: path.resolve(__dirname, "src", "app", "index.js"),
     output: {
         // options related to how webpack emits results
-        path: path.resolve(__dirname, "src", "web", "dist"), // string
+        path: path.resolve(__dirname, "dist"), // string
         // the target directory for all output files
         // must be an absolute path (use the Node.js path module)
         filename: "bundle.js", // string
@@ -17,12 +17,12 @@ module.exports = {
             {
                 test: /\.(js|jsx)?$/,
                 include: [
-                  path.resolve(__dirname, "src", "web", "actions"),
-                  path.resolve(__dirname, "src", "web", "app"),
-                  path.resolve(__dirname, "src", "web", "components"),
-                  path.resolve(__dirname, "src", "web", "containers"),
-                  path.resolve(__dirname, "src", "web", "methods"),
-                  path.resolve(__dirname, "src", "web", "reducers")
+                  path.resolve(__dirname, "src", "actions"),
+                  path.resolve(__dirname, "src", "app"),
+                  path.resolve(__dirname, "src", "components"),
+                  path.resolve(__dirname, "src", "containers"),
+                  path.resolve(__dirname, "src", "methods"),
+                  path.resolve(__dirname, "src", "reducers")
                 ],
                 exclude: /node_modules/,
                 loader: "babel-loader",
@@ -33,27 +33,27 @@ module.exports = {
             {
                 test: /\.html$/,
                 include: [
-                    path.resolve(__dirname, "src", "web", "app")
+                    path.resolve(__dirname, "src", "app")
                 ],
                 loader: "html-loader"
             },
             {
                 test: /\.css?$/,
                 include: [
-                  path.resolve(__dirname, "src", "web", "style")
+                  path.resolve(__dirname, "src", "style")
                 ],
                 use: ["style-loader", "css-loader"]
             }
         ]
     },
     plugins: [
-        new HtmlWebpackPlugin({hash: true, template: path.resolve(__dirname, "src", "web", "app", "index.html"), filename: path.resolve(__dirname, "src", "web", "dist", "index.html")}),
-        new webpack.DefinePlugin({
-            'process.env': {
-                'NODE_ENV': JSON.stringify('production')
-            }
-        }),
-        new webpack.optimize.AggressiveMergingPlugin() //Merge chunks 
+        new HtmlWebpackPlugin({hash: true, template: path.resolve(__dirname, "src", "app", "index.html"), filename: path.resolve(__dirname, "dist", "index.html")}),
+        // new webpack.DefinePlugin({
+        //     'process.env': {
+        //         'NODE_ENV': JSON.stringify('production')
+        //     }
+        // }),
+        // new webpack.optimize.AggressiveMergingPlugin() //Merge chunks 
     ],
     resolve: {
         // options for resolving module requests

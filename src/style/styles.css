@@ -8,13 +8,13 @@ html, body {
     font-family: "Exo 2", sans-serif;
     margin: 0;
     padding: 0;
-    background: black;
-    color: white;
+    background: white;
+    color: black;
 }
 
 .small-font {
     font-size: 12px;
-    color: #888888;
+    color: #777777;
 }
 
 .inline {
@@ -67,14 +67,15 @@ html, body {
     outline: none !important;
     width: 125px;
     height: 47px;
-    color: #9f9f9f;
+    color: #404040;
     animation-name: hide;
     transition-duration: 0.5s;
+    border-color: #202020;
 }
 
 .button:hover {
-    background-color: #7c7c7c;
-    color: white;
+    background-color: #a0a0a0;
+    color: black;
 }
 
 .button:disabled {
@@ -83,10 +84,10 @@ html, body {
 }
 
 .input {
-    color: #5f5f5f;
+    color: #a0a0a0;
     font-family: "Cairo", sans-serif;
     border: none;
-    border-bottom: 3px solid #3d3d3d;
+    border-bottom: 3px solid #c2c2c2;
     outline: none !important;
     width: 500px;
     height: 60px;
@@ -100,19 +101,19 @@ input[type="text"], textarea {
 }
 
 .input:focus {
-    border-bottom: 3px solid #9f9f9f;
-    color: #9f9f9f;
+    border-bottom: 3px solid #606060;
+    color: #606060;
 }
 
 .select {
     font-family: "Exo 2", sans-serif;
     padding: 4px 8px;
-    border: 2px solid black;
+    border: 2px solid #202020;
     border-radius: 4px;
     background-color: Transparent;
     background-repeat: no-repeat;
-    border-color: #9c9c9c;
-    color: #9f9f9f;
+    border-color: #636363;
+    color: #606060;
     outline: none !important;
     width: 150px;
     height: 45px;
@@ -122,13 +123,13 @@ input[type="text"], textarea {
 }
 
 .select:focus {
-    background-color: #000000;
+    background-color: transparent;
 }
 
 .name-header {
-    color: #9f9f9f;
+    color: #606060;
 }
 
 .name-text {
-    color: #9f9f9f;
+    color: #606060;
 }

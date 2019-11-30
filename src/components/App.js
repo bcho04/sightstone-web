@@ -10,16 +10,13 @@ class App extends React.Component {
                 <div id="background">
                     <Background />
                 </div>
-                <div class="screen-center" id="input">
+                <div className="screen-center" id="input">
                     <InputForm placeholder="Enter summoner..." />
                 </div>
-                <div>
-                    <div class="player-info" id="player-info">
-                        <PlayerStatsPanel />
-                    </div>
-                    <div id="charts"></div>
+                <div className="player-info" id="player-info">
+                    <PlayerStatsPanel />
                 </div>
-                <div id="footer"  class="small-font">
+                <div id="footer" className="small-font">
                     <center>
                         <p>Terms of Service</p>
                         <p>Privacy Policy</p>
