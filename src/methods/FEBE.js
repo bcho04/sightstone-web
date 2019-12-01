@@ -5,7 +5,7 @@ class FEBE {
         return new Promise((resolve, reject) => {
             options.type = options.type == null ? "get" : options.type;
 
-            let uri = "http://127.0.0.1:8080/v1/summoner/" + options.type + "?";
+            let uri = "https://rubidium-api.herokuapp.com/v1/summoner/" + options.type + "?";
             uri += "server=" + options.server + "&";
             uri += "username=" + options.username;
 

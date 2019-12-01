@@ -3,7 +3,7 @@
   "author": "Brandon Cho",
   "description": "A League of Legends statistical analyzer.",
   "version": "1.0.0",
-  "main": "./src/server/server.js",
+  "main": "./src/app/index.js",
   "dependencies": {
     "chart.js": "^2.9.3",
     "node": "^12.13.0",
@@ -38,6 +38,7 @@
     "webpack-dev-server": "^3.9.0"
   },
   "scripts": {
+    "start": "node ./server/server.js",
     "build": "webpack"
   }
 }
