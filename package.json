@@ -6,6 +6,7 @@
   "main": "./src/app/index.js",
   "dependencies": {
     "chart.js": "^2.9.3",
+    "express": "^4.17.1",
     "node": "^12.13.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
