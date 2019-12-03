@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { setUsername, setServer, setData, toggleInputForm, togglePlayerStats } from "../actions/actions";
 import FEBE from "../methods/FEBE";
+import Alert from "react-bootstrap/Alert";
 
 class NameForm extends React.Component {
     constructor(props){
@@ -9,6 +10,9 @@ class NameForm extends React.Component {
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleServerChange = this.handleServerChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+            alertText: ""
+        }
     }
 
     handleNameChange(event){
@@ -31,13 +35,14 @@ class NameForm extends React.Component {
                 this.props.dispatch(toggleInputForm());
                 this.props.dispatch(togglePlayerStats());
                 this.props.dispatch(setData(body.data));
+                this.setState({alertText: ""});
             }).catch((error) => {
-                if(error == 404) alert("Username not found in server. Please check your username spelling and server and try again.");
-                else if(error == 500) alert("There was a server-side error.");
-                else alert("There was an error while attempting this search. Please check your username and server and try again.");
+                if(error == 404) this.setState({alertText: "Username not found in server. Please check your username spelling and server and try again."});
+                else if(error == 500) this.setState({alertText: "There was a server-side error."});
+                else this.setState({alertText: "There was an error while attempting this search. Please check your username and server and try again."});
             });
         } else {
-            alert("You are offline. Please reconnect to search.");
+            this.setState({alertText: "You are offline. Please reconnect to search."});
         }
         event.preventDefault();
     }
@@ -66,6 +71,7 @@ class NameForm extends React.Component {
                     </select>
                     <input id="submit" className="button" onClick={this.handleSubmit} disabled={!(summonerRegex.exec(this.props.username) && this.props.server) ? true : false} type="submit" value="Search &#x300B;" />
                 </form>
+                {this.state.alertText != "" && <Alert variant="danger">{this.state.alertText}</Alert>}
             </div>
         );
     }

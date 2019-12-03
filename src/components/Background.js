@@ -27,12 +27,13 @@ class Background extends React.Component {
         camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
         camera.position.z = 1000;
         scene = new THREE.Scene();
-        renderer = new THREE.WebGLRenderer();
+        renderer = new THREE.WebGLRenderer( {alpha: true} );
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setClearColor( 0xffffff, 0 );
         document.getElementById("background").appendChild( renderer.domElement );
         // background
-        scene.background = new THREE.Color( 0xffffff )
+        //scene.background = new THREE.Color( 0xffffff )
         // particles
         var PI2 = Math.PI * 2;
         var material = new THREE.SpriteMaterial( {
