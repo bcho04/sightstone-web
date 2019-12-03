@@ -6,7 +6,7 @@
                     */
 
 html, body {
-    font-family: "Catamaran", sans-serif;
+    font-family: "Exo 2", sans-serif;
     margin: 0;
     padding: 0;
     background: white;
@@ -38,8 +38,8 @@ html, body {
 .player-info {
     position: absolute;
     width: 100%;
-    top: 0px; /* Don't push the canvas down. */
-    z-index: 1;
+    top: 56px; /* Don't push the canvas down. */
+    z-index: 2;
 }
 
 .show {
@@ -144,10 +144,15 @@ input[type="text"], textarea {
 }
 
 .footer {
+    font-family: "Catamaran", sans-serif;
     text-align: center;
     background: #f8f9fa;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.loading-info {
+    margin-top: 10px;
 }
 
 /*

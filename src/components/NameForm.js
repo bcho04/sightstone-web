@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { setUsername, setServer, setData, toggleInputForm, togglePlayerStats } from "../actions/actions";
 import FEBE from "../methods/FEBE";
 import Alert from "react-bootstrap/Alert";
+import Spinner from "react-bootstrap/Spinner";
 
 class NameForm extends React.Component {
     constructor(props){
@@ -11,7 +12,8 @@ class NameForm extends React.Component {
         this.handleServerChange = this.handleServerChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
-            alertText: ""
+            alertText: "",
+            showSpinner: false
         }
     }
 
@@ -24,6 +26,8 @@ class NameForm extends React.Component {
     }
 
     handleSubmit(event){
+        this.setState({showSpinner: true});
+        this.setState({alertText: ""});
         if(window.onLine || navigator.onLine){
             let request_options = {
                 server: this.props.server,
@@ -32,16 +36,19 @@ class NameForm extends React.Component {
             };
 
             FEBE.request(request_options).then((body) => {
+                this.setState({showSpinner: false});
+                this.setState({alertText: ""});
                 this.props.dispatch(toggleInputForm());
                 this.props.dispatch(togglePlayerStats());
                 this.props.dispatch(setData(body.data));
-                this.setState({alertText: ""});
             }).catch((error) => {
+                this.setState({showSpinner: false});
                 if(error == 404) this.setState({alertText: "Username not found in server. Please check your username spelling and server and try again."});
                 else if(error == 500) this.setState({alertText: "There was a server-side error."});
                 else this.setState({alertText: "There was an error while attempting this search. Please check your username and server and try again."});
             });
         } else {
+            this.setState({showSpinner: false});
             this.setState({alertText: "You are offline. Please reconnect to search."});
         }
         event.preventDefault();
@@ -71,7 +78,10 @@ class NameForm extends React.Component {
                     </select>
                     <input id="submit" className="button" onClick={this.handleSubmit} disabled={!(summonerRegex.exec(this.props.username) && this.props.server) ? true : false} type="submit" value="Search &#x300B;" />
                 </form>
-                {this.state.alertText != "" && <Alert variant="danger">{this.state.alertText}</Alert>}
+                <center className="loading-info">
+                    {this.state.showSpinner && <Spinner animation="border" variant="secondary" size="lg" />}
+                    {this.state.alertText != "" && <Alert variant="danger">{this.state.alertText}</Alert>}
+                </center>
             </div>
         );
     }
