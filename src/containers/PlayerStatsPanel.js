@@ -6,8 +6,18 @@ import DataChart from "../components/DataChart";
 import { setData } from "../actions/actions"
 import { connect } from "react-redux";
 import FEBE from "../methods/FEBE";
+import Modal from "react-bootstrap/Modal";
 
 class PlayerStatsTemplate extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showModal: false,
+            modalHeader: "",
+            modalText: ""
+        };
+    }
+
     render() {
         return (
             <div className={this.props.className}>
@@ -24,47 +34,27 @@ class PlayerStatsTemplate extends React.Component {
                     
                             FEBE.request(request_options).then((body) => {
                                 this.props.dispatch(setData(body.data));
+                                this.setState({showModal: true});
+                                this.setState({modalHeader: "Information"});
+                                this.setState({modalText: "Player data update request successfully sent."});
                             }).catch((error) => {
-                                if(error == 404) alert("Username not found in server. Please check your username spelling and server and try again.");
-                                else if(error == 500) alert("There was a server-side error.");
-                                else alert("There was an error while attempting this search. Please check your username and server and try again.");
+                                this.setState({showModal: true, modalHeader: "Error"});
+                                if(error == 404) this.setState({modalText: "Username not found in server. Please check your username and server spelling and try again."});
+                                else if(error == 500) this.setState({modalText: "There was a server-side error."});
+                                else this.setState({modalText: "There was an error while attempting this search. Please check your username and server and try again."});
                             });
                     
                             event.preventDefault();
                         }} />
                     </center>
+                    <Modal show={this.state.showModal} onHide={() => this.setState({showModal: false})} animation={true}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>{this.state.modalHeader}</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>{this.state.modalText}</Modal.Body>
+                    </Modal>
                 </div>
-                <div id="charts">
-                    <DataChart width="300" height="200" options={{
-                        type: "bar",
-                        data: {
-                            labels: ["a", "b", "c"],
-                            datasets: [{
-                                label: "X",
-                                data: [1,2,3],
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                ],
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-                            }
-                        }
-                    }} />
-                </div>
+                <div id="charts"></div>
                 <div id="chart-scripts"></div>
             </div>
         );
