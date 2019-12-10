@@ -14,7 +14,8 @@ class PlayerStatsTemplate extends React.Component {
         this.state = {
             showModal: false,
             modalHeader: "",
-            modalText: ""
+            modalText: "",
+            updateClickable: true
         };
     }
 
@@ -25,23 +26,25 @@ class PlayerStatsTemplate extends React.Component {
                     <center>
                         <ReduxHeader type="username" className="redux-header" />
                         <ReduxText type="server" className="redux-text" />
-                        <Button text="Update" className="button" onClick={(event) => {
-                            let request_options = {
+                        <Button text="Update" className="button" disabled={!this.state.updateClickable} onClick={(event) => {
+                            this.setState({updateClickable: false});
+
+                            let update_options = {
                                 server: this.props.server,
                                 username: this.props.username,
                                 type: "update"
                             };
-                    
-                            FEBE.request(request_options).then((body) => {
-                                this.props.dispatch(setData(body.data));
+                            
+                            FEBE.request(update_options).then(() => {
                                 this.setState({showModal: true});
                                 this.setState({modalHeader: "Information"});
                                 this.setState({modalText: "Player data update request successfully sent."});
+                                this.setState({updateClickable: true});
                             }).catch((error) => {
                                 this.setState({showModal: true, modalHeader: "Error"});
-                                if(error == 404) this.setState({modalText: "Username not found in server. Please check your username and server spelling and try again."});
-                                else if(error == 500) this.setState({modalText: "There was a server-side error."});
-                                else this.setState({modalText: "There was an error while attempting this search. Please check your username and server and try again."});
+                                if(error == 500) this.setState({modalText: "There was a server-side error."});
+                                else this.setState({modalText: "There was an error while connecting. Please try again later."});
+                                this.setState({updateClickable: true});
                             });
                     
                             event.preventDefault();

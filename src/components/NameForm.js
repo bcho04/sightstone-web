@@ -4,6 +4,7 @@ import { setUsername, setServer, setData, toggleInputForm, togglePlayerStats } f
 import FEBE from "../methods/FEBE";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
+import XRegExp from "xregexp";
 
 class NameForm extends React.Component {
     constructor(props){
@@ -55,7 +56,7 @@ class NameForm extends React.Component {
     }
 
     render(){
-        let summonerRegex = /^[^\ ][0-9_\-A-Za-z\ ]{2,}$/
+        let summonerRegex = XRegExp("^[0-9\\p{L} _\\.]+$");
         return (
             <div className={this.props.className}>
                 <form onSubmit={this.handleSubmit}>
@@ -76,7 +77,7 @@ class NameForm extends React.Component {
                         <option value="br1">BR</option>
                         <option value="tr1">TR</option>
                     </select>
-                    <input id="submit" className="button" onClick={this.handleSubmit} disabled={!(summonerRegex.exec(this.props.username) && this.props.server) ? true : false} type="submit" value="Search &#x300B;" />
+                    <input id="submit" className="button" onClick={this.handleSubmit} disabled={!(summonerRegex.test(this.props.username) && this.props.server) ? true : false} type="submit" value="Search &#x300B;" />
                 </form>
                 <center className="loading-info">
                     {this.state.showSpinner && <Spinner animation="border" variant="secondary" size="lg" />}
