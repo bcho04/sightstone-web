@@ -24,9 +24,9 @@ class App extends React.Component {
                     <footer>
                         <div className="container">
                             <p>©&nbsp;Brandon Cho 2020. All rights reserved.</p>
-                            <p>We're open source! View our <a href="https://github.com/bcho04/sightstone">server</a> and <a href="https://github.com/bcho04/rubidium-web">web</a> source code.</p>
+                            <p>We're open source! View our <a href="https://github.com/bcho04/sightstone">server</a> and <a href="https://github.com/bcho04/sightstone-web">web</a> source code.</p>
                             <hr></hr>
-                            <p>Rubidium isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing<br></br>
+                            <p>Sightstone isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing<br></br>
                             League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.<br></br></p>
                             <ul className="list-inline">
                                 <li className="list-inline-item"><a href="index.html">Home</a></li>
