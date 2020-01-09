@@ -130,11 +130,23 @@ input[type="text"], textarea {
 }
 
 .name-header {
-    color: #606060;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
-.name-text {
+.name-header h2 {
     color: #606060;
+    display: inline;
+}
+
+.name-header span {
+    color: #606060;
+    margin-left: 10px;
+}
+
+.name-header Button {
+    float: right;
+    margin-right: 10px;
 }
 
 /* background: url('../../assets/img/bg-pattern.png'), linear-gradient(to left, #7b4397, #24a5dc); */
@@ -153,6 +165,17 @@ input[type="text"], textarea {
 
 .loading-info {
     margin-top: 10px;
+}
+
+.mastery-panel {
+    height: 100%;
+}
+
+.mastery-panel-lg {
+    max-height: calc(85vh - 47px);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    overflow: scroll;
 }
 
 /*

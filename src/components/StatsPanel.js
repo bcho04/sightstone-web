@@ -1,14 +1,12 @@
 import React from "react";
-import ReduxHeader from "./ReduxHeader";
-import ReduxText from "./ReduxText";
 import Button from "../components/Button";
 import DataChart from "../components/DataChart";
 import { setData } from "../actions/actions"
-import { connect } from "react-redux";
 import FEBE from "../methods/FEBE";
 import Modal from "react-bootstrap/Modal";
+import ChampionMasteryPanel from "../containers/MasteryPanel";
 
-class PlayerStatsTemplate extends React.Component {
+class StatsPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -23,9 +21,9 @@ class PlayerStatsTemplate extends React.Component {
         return (
             <div className={this.props.className}>
                 <div id="user-server">
-                    <center>
-                        <ReduxHeader type="username" className="redux-header" />
-                        <ReduxText type="server" className="redux-text" />
+                    <div className="name-header">
+                        <h2>{this.props.username}</h2>
+                        <span>{this.props.server}</span>
                         <Button text="Update" className="button" disabled={!this.state.updateClickable} onClick={(event) => {
                             this.setState({updateClickable: false});
 
@@ -38,7 +36,7 @@ class PlayerStatsTemplate extends React.Component {
                             FEBE.request(update_options).then(() => {
                                 this.setState({showModal: true});
                                 this.setState({modalHeader: "Information"});
-                                this.setState({modalText: "Player data update request successfully sent."});
+                                this.setState({modalText: "Player data updated successfully."});
                                 this.setState({updateClickable: true});
                             }).catch((error) => {
                                 this.setState({showModal: true, modalHeader: "Error"});
@@ -49,7 +47,7 @@ class PlayerStatsTemplate extends React.Component {
                     
                             event.preventDefault();
                         }} />
-                    </center>
+                    </div>
                     <Modal show={this.state.showModal} onHide={() => this.setState({showModal: false})} animation={true}>
                         <Modal.Header closeButton>
                             <Modal.Title>{this.state.modalHeader}</Modal.Title>
@@ -57,21 +55,10 @@ class PlayerStatsTemplate extends React.Component {
                         <Modal.Body>{this.state.modalText}</Modal.Body>
                     </Modal>
                 </div>
-                <div id="charts"></div>
-                <div id="chart-scripts"></div>
+                <ChampionMasteryPanel className="mastery-panel" />
             </div>
         );
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        className: state.render.playerStats ? "show" : "hide",
-        server: state.info.server,
-        username: state.info.username
-    };
-}
-
-const PlayerStatsPanel = connect(mapStateToProps)(PlayerStatsTemplate);
-
-export default PlayerStatsPanel;
+export default StatsPanel;

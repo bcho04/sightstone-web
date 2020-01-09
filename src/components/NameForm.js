@@ -33,7 +33,7 @@ class NameForm extends React.Component {
             let request_options = {
                 server: this.props.server,
                 username: this.props.username,
-                type: "get"
+                type: "mastery/ranking"
             };
 
             FEBE.request(request_options).then((body) => {
@@ -41,7 +41,7 @@ class NameForm extends React.Component {
                 this.setState({alertText: ""});
                 this.props.dispatch(toggleInputForm());
                 this.props.dispatch(togglePlayerStats());
-                this.props.dispatch(setData(body.data));
+                this.props.dispatch(setData(JSON.parse(body)));
             }).catch((error) => {
                 this.setState({showSpinner: false});
                 if(error == 404) this.setState({alertText: "Username not found in server. Please check your username spelling and server and try again."});
