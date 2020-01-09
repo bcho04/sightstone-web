@@ -30,7 +30,7 @@ class StatsPanel extends React.Component {
                             let update_options = {
                                 server: this.props.server,
                                 username: this.props.username,
-                                type: "update"
+                                type: "update",
                             };
                             
                             FEBE.request(update_options).then(() => {

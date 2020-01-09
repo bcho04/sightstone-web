@@ -3,11 +3,9 @@ import request from "request";
 class FEBE {
     static request(options){
         return new Promise((resolve, reject) => {
-            options.type = options.type == null ? "get" : options.type;
+            options.type = options.type == null ? "mastery/ranking" : options.type;
 
-            let uri = "http://127.0.0.1:8080/" + options.type + "?";
-            uri += "server=" + options.server + "&";
-            uri += "username=" + options.username;
+            let uri = `https://rubidium-api.herokuapp.com/${options.type}?server=${options.server}&username=${options.username}`;
 
             request.get(uri, (err, response, body) => {
                 if(err) return reject(err);

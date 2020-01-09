@@ -33,7 +33,7 @@ class NameForm extends React.Component {
             let request_options = {
                 server: this.props.server,
                 username: this.props.username,
-                type: "mastery/ranking"
+                type: "mastery/ranking",
             };
 
             FEBE.request(request_options).then((body) => {
