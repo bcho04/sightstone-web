@@ -15,6 +15,10 @@ function dataReducer(state={}, action) {
             return Object.assign({}, state, {
                 data: action.data
             });
+        case Actions.SET_LEADERBOARD:
+            return Object.assign({}, state, {
+                leaderboard: action.leaderboard
+            });
         default:
             return state;
     }
@@ -22,13 +26,17 @@ function dataReducer(state={}, action) {
 
 function renderReducer(state={}, action) {
     switch(action.type) {
-        case Actions.TOGGLE_INPUT_FORM:
+        case Actions.SHOW_INPUT_FORM:
             return Object.assign({}, state, {
-                inputForm: !state.inputForm
+                show: "INPUT_FORM"
             });
-        case Actions.TOGGLE_PLAYER_STATS:
+        case Actions.SHOW_PLAYER_STATS:
             return Object.assign({}, state, {
-                playerStats: !state.playerStats
+                show: "PLAYER_STATS"
+            });
+        case Actions.SHOW_CHAMPION_STATS:
+            return Object.assign({}, state, {
+                show: "CHAMPION_STATS"
             });
         default:
             return state;

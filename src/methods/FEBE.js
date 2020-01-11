@@ -5,7 +5,9 @@ class FEBE {
         return new Promise((resolve, reject) => {
             options.type = options.type == null ? "mastery/ranking" : options.type;
 
-            let uri = `https://rubidium-api.herokuapp.com/${options.type}?server=${options.server}&username=${options.username}`;
+            let uri = `http://rubidium-api.herokuapp.com/${options.type}?`;
+            uri += typeof options.server != 'undefined' ? `server=${options.server}` : '';
+            uri += typeof options.username != 'undefined' ? `&username=${options.username}` : '';
 
             request.get(uri, (err, response, body) => {
                 if(err) return reject(err);

@@ -3,7 +3,7 @@ import MasteryPanel from "../components/MasteryPanel";
 
 const mapStateToProps = (state) => {
     return {
-        className: state.render.playerStats ? "show" : "hide",
+        className: state.render.show == "PLAYER_STATS" ? "show" : "hide",
         championData: state.info.data,
     };
 }

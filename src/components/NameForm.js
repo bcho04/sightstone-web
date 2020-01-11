@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { setUsername, setServer, setData, toggleInputForm, togglePlayerStats } from "../actions/actions";
+import { setUsername, setServer, setData, showPlayerStats } from "../actions/actions";
 import FEBE from "../methods/FEBE";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
@@ -39,8 +39,7 @@ class NameForm extends React.Component {
             FEBE.request(request_options).then((body) => {
                 this.setState({showSpinner: false});
                 this.setState({alertText: ""});
-                this.props.dispatch(toggleInputForm());
-                this.props.dispatch(togglePlayerStats());
+                this.props.dispatch(showPlayerStats());
                 this.props.dispatch(setData(JSON.parse(body)));
             }).catch((error) => {
                 this.setState({showSpinner: false});

@@ -14,10 +14,15 @@ class MasteryPanel extends React.Component {
     render() {
         let championPanelList = [];
         Object.keys(this.props.championData).sort().forEach((key) => {
+            let variant = "secondary";
+            if (this.props.championData[key].level == 7) variant = "info";
+            if (this.props.championData[key].level == 6) variant = "success";
+            if (this.props.championData[key].level == 5) variant = "danger";
+
             championPanelList.push(
                 <ListGroup.Item action href={"#"+key}>
                     {key}
-                        <Badge variant="secondary" style={{float: "right", marginTop: '3px'}}>{this.props.championData[key].points}</Badge>
+                        <Badge variant={variant} style={{float: "right", marginTop: '3px'}}>{this.props.championData[key].points}</Badge>
                 </ListGroup.Item>
             );
         });
@@ -36,13 +41,13 @@ class MasteryPanel extends React.Component {
         return (
             <div id="mastery-panel" className={this.props.className}>
                 <Tab.Container>
-                    <Row>
+                    <Row style={{width: '90vw'}}>
                         <Col xs={2}>
                             <ListGroup variant="flush" className="mastery-panel-lg">
                                 {championPanelList}
                             </ListGroup>
                         </Col>
-                        <Col xs={8}>
+                        <Col xs={10}>
                             <Tab.Content>
                                 {championTabContent}
                             </Tab.Content>

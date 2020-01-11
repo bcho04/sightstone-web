@@ -30,11 +30,11 @@ const store = createStore(appReducer, {
     info: {
         username: (url.searchParams.get("username") || ""), 
         server: serverLookup[(url.searchParams.get("server") || "")],
-        data: {}
+        data: {},
+        leaderboard: {},
     },
     render: {
-        inputForm: true,
-        playerStats: false
+        show: "INPUT_FORM"
     }
 });
 

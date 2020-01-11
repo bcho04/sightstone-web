@@ -2,7 +2,8 @@ import React from "react";
 import Background from "./Background"
 import InputForm from "../containers/InputForm";
 import StatsPanel from "../containers/StatsPanel";
-import Navigation from "./Navigation";
+import Navigation from "../containers/Navigation";
+import ChampionPanel from "../containers/ChampionPanel";
 
 class App extends React.Component {
     render() {
@@ -19,6 +20,9 @@ class App extends React.Component {
                 </div>
                 <div className="player-info" id="player-info">
                     <StatsPanel />
+                </div>
+                <div className="champion-stats" id="player-stats">
+                    <ChampionPanel />
                 </div>
                 <div id="footer" className="small-font footer">
                     <footer>

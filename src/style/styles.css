@@ -144,7 +144,7 @@ input[type="text"], textarea {
     margin-left: 10px;
 }
 
-.name-header Button {
+.user-server-right {
     float: right;
     margin-right: 10px;
 }
@@ -169,13 +169,35 @@ input[type="text"], textarea {
 
 .mastery-panel {
     height: 100%;
+    width: 100%;
 }
 
 .mastery-panel-lg {
     max-height: calc(85vh - 47px);
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 10px;
     overflow: scroll;
+}
+
+.leaderboard-panel-lg {
+    max-height: calc(90vh);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: scroll;
+}
+
+.leaderboard-table {
+    max-height: calc(90vh);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: scroll;
+}
+
+.champion-stats {
+    position: absolute;
+    width: 100%;
+    top: 56px; /* Don't push the canvas down. */
+    z-index: 3;
 }
 
 /*

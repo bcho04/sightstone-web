@@ -6,7 +6,7 @@ const mapStateToProps = (state, ownProps) => {
         server: state.info.server,
         username: state.info.username,
         placeholder: ownProps.placeholder,
-        className: state.render.inputForm ? "show" : "hide"
+        className: state.render.show == "INPUT_FORM" ? "show" : "hide"
     };
 }
 
