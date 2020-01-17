@@ -32,7 +32,9 @@ class MasteryPanel extends React.Component {
             let currentObj = this.props.championData[key];
             championTabContent.push(
                 <Tab.Pane eventKey={"#"+key}>
-                    <h1>{currentObj.pos.toString() + " / " + currentObj.total.toString()}</h1>
+                    <div style={{zIndex: '3', position: 'absolute', top: '42%', left: '42%'}}>
+                        <h1>{currentObj.pos != -1 ? currentObj.pos.toString() + " / " + currentObj.total.toString() : "Not ranked"}</h1>
+                    </div>
                 </Tab.Pane>
             );
         });
