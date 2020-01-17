@@ -1,9 +1,10 @@
 const path    = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const process = require('process');
 
 module.exports = {
-    mode: "development",
+    mode: process.env.NODE_ENV,
     entry: path.resolve(__dirname, "src", "app", "index.js"),
     output: {
         // options related to how webpack emits results
