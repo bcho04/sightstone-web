@@ -1,7 +1,5 @@
 import React from "react";
 import Button from "../components/Button";
-import DataChart from "../components/DataChart";
-import { setData } from "../actions/actions"
 import FEBE from "../methods/FEBE";
 import Modal from "react-bootstrap/Modal";
 import ChampionMasteryPanel from "../containers/MasteryPanel";

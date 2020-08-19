@@ -3,9 +3,9 @@ import request from "request";
 class FEBE {
     static request(options){
         return new Promise((resolve, reject) => {
-            options.type = options.type == null ? "mastery/ranking" : options.type;
+            if(options.type === null || options.type === undefined) reject();
 
-            let uri = `https://rubidium-api.herokuapp.com/${options.type}?`;
+            let uri = `http://localhost:8080/${options.type}?`; // rubidium-api.herokuapp.com
             uri += typeof options.server != 'undefined' ? `server=${options.server}` : '';
             uri += typeof options.username != 'undefined' ? `&username=${options.username}` : '';
 

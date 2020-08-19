@@ -11,13 +11,17 @@ function dataReducer(state={}, action) {
             return Object.assign({}, state, {
                 server: action.server
             });
-        case Actions.SET_DATA:
+        case Actions.SET_PLAYER:
             return Object.assign({}, state, {
                 data: action.data
             });
         case Actions.SET_LEADERBOARD:
             return Object.assign({}, state, {
                 leaderboard: action.leaderboard
+            });
+        case Actions.SET_HISTOGRAM:
+            return Object.assign({}, state, {
+                histogram: action.histogram
             });
         default:
             return state;

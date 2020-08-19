@@ -1,5 +1,5 @@
 import React from "react";
-import DataChart from "./DataChart";
+import DistributionChart from "./DistributionChart";
 import Tab from "react-bootstrap/Tab";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
@@ -30,11 +30,16 @@ class MasteryPanel extends React.Component {
         let championTabContent = [];
         Object.keys(this.props.championData).sort().forEach((key) => {
             let currentObj = this.props.championData[key];
+            let currentHist = this.props.histogramData[key];
             championTabContent.push(
                 <Tab.Pane eventKey={"#"+key}>
-                    <div style={{zIndex: '3', position: 'absolute', top: '42%', left: '42%'}}>
+                    {/* <div style={{zIndex: '3', position: 'absolute', top: '42%', left: '42%'}}>
                         <h1>{currentObj.pos != -1 ? currentObj.pos.toString() + " / " + currentObj.total.toString() : "Not ranked"}</h1>
-                    </div>
+                    </div> */}
+                    <DistributionChart champion={key} data={currentHist}
+                        rank={currentObj.pos != -1 ? "Rank: " + currentObj.pos.toString() + " / " + currentObj.total.toString() : "not ranked"}
+                        lineIndex={Math.floor(this.props.championData[key].points/25000)}
+                    />
                 </Tab.Pane>
             );
         });

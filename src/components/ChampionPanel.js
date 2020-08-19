@@ -1,5 +1,4 @@
 import React from "react";
-import DataChart from "./DataChart";
 import Tab from "react-bootstrap/Tab";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";

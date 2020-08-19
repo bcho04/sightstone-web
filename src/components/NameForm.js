@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { setUsername, setServer, setData, showPlayerStats } from "../actions/actions";
+import { setUsername, setServer, setPlayer, setHistogram, showPlayerStats } from "../actions/actions";
 import FEBE from "../methods/FEBE";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
@@ -30,17 +30,24 @@ class NameForm extends React.Component {
         this.setState({showSpinner: true});
         this.setState({alertText: ""});
         if(window.onLine || navigator.onLine){
-            let request_options = {
+            let request_options_r = {
                 server: this.props.server,
                 username: this.props.username,
                 type: "mastery/ranking",
             };
 
-            FEBE.request(request_options).then((body) => {
-                this.setState({showSpinner: false});
-                this.setState({alertText: ""});
-                this.props.dispatch(showPlayerStats());
-                this.props.dispatch(setData(JSON.parse(body)));
+            let request_options_d = {
+                type: "mastery/distribution",
+            };
+
+            FEBE.request(request_options_r).then((body_r) => {
+                FEBE.request(request_options_d).then((body_h) => {
+                    this.setState({showSpinner: false});
+                    this.setState({alertText: ""});
+                    this.props.dispatch(showPlayerStats());
+                    this.props.dispatch(setPlayer(JSON.parse(body_r)));
+                    this.props.dispatch(setHistogram(JSON.parse(body_h)));
+                });
             }).catch((error) => {
                 this.setState({showSpinner: false});
                 if(error == 404) this.setState({alertText: "Username not found in server. Please check your username spelling and server and try again."});

@@ -13,8 +13,9 @@
 
 export const SET_USERNAME           = "SET_USERNAME";
 export const SET_SERVER             = "SET_SERVER";
-export const SET_DATA               = "SET_DATA";
+export const SET_PLAYER             = "SET_PLAYER";
 export const SET_LEADERBOARD        = "SET_LEADERBOARD";
+export const SET_HISTOGRAM          = "SET_HISTOGRAM";
 export const SHOW_INPUT_FORM        = "SHOW_INPUT_FORM";
 export const SHOW_PLAYER_STATS      = "SHOW_PLAYER_STATS";
 export const SHOW_CHAMPION_STATS    = "SHOW_CHAMPION_STATS";
@@ -33,9 +34,9 @@ export function setServer(server) {
     };
 }
 
-export function setData(data) {
+export function setPlayer(data) {
     return {
-        type: SET_DATA,
+        type: SET_PLAYER,
         data
     };
 }
@@ -44,6 +45,13 @@ export function setLeaderboard(leaderboard) {
     return {
         type: SET_LEADERBOARD,
         leaderboard
+    }
+}
+
+export function setHistogram(histogram) {
+    return {
+        type: SET_HISTOGRAM,
+        histogram
     }
 }
 
