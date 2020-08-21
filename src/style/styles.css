@@ -203,3 +203,8 @@ input[type="text"], textarea {
 /*
 <<  Bootstrap CSS  >>
                     */
+
+.badge-m6 {
+    background-color: #9932cc;
+    color: white;
+}

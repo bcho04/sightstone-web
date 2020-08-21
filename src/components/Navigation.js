@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import { showInputForm, setLeaderboard, showChampionStats } from '../actions/actions';
+import { setLeaderboard, showChampionStats } from '../actions/actions';
 import FEBE from "../methods/FEBE";
 
 class Navigation extends React.Component {
@@ -11,10 +11,10 @@ class Navigation extends React.Component {
                 <Navbar.Brand href="index.html"><strong>Sightstone</strong></Navbar.Brand>
                 <Navbar.Collapse id="responsive-navbar-nav">
                     <Nav className="ml-auto">
-                        <Nav.Link onClick={(event) => {
+                        {/* <Nav.Link onClick={(event) => {
                             this.props.dispatch(showInputForm());
                             event.preventDefault();
-                        }}>Home</Nav.Link>
+                        }}>Home</Nav.Link> */}
                         <Nav.Link onClick={(event) => {
                             let request_options = {
                                 type: "mastery/leaderboard"

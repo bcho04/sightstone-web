@@ -32,7 +32,7 @@ class App extends React.Component {
                 // write label
                 context.fillStyle = "#ff0000";
                 context.textAlign = 'center';
-                //context.fillText('You', lineLeftOffset, (scale.bottom - scale.top) / 2 + scale.top);
+                // context.fillText('You', lineLeftOffset, 0.03 * (scale.bottom - scale.top) + scale.top);
             },
           
             afterDatasetsDraw: function (chart, easing) {

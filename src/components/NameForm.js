@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { setUsername, setServer, setPlayer, setHistogram, showPlayerStats } from "../actions/actions";
+import { setUsername, setServer, setSummoner, setRanking, setHistogram, showPlayerStats } from "../actions/actions";
 import FEBE from "../methods/FEBE";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
@@ -30,6 +30,18 @@ class NameForm extends React.Component {
         this.setState({showSpinner: true});
         this.setState({alertText: ""});
         if(window.onLine || navigator.onLine){
+            let request_options_u = {
+                server: this.props.server,
+                username: this.props.username,
+                type: "update",
+            };
+
+            let request_options_s = {
+                server: this.props.server,
+                username: this.props.username,
+                type: "summoner",
+            };
+            
             let request_options_r = {
                 server: this.props.server,
                 username: this.props.username,
@@ -40,13 +52,18 @@ class NameForm extends React.Component {
                 type: "mastery/distribution",
             };
 
-            FEBE.request(request_options_r).then((body_r) => {
-                FEBE.request(request_options_d).then((body_h) => {
-                    this.setState({showSpinner: false});
-                    this.setState({alertText: ""});
-                    this.props.dispatch(showPlayerStats());
-                    this.props.dispatch(setPlayer(JSON.parse(body_r)));
-                    this.props.dispatch(setHistogram(JSON.parse(body_h)));
+            FEBE.request(request_options_u).then(() => {
+                FEBE.request(request_options_s).then((body_s) => {
+                    FEBE.request(request_options_r).then((body_r) => {
+                        FEBE.request(request_options_d).then((body_h) => {
+                            this.setState({showSpinner: false});
+                            this.setState({alertText: ""});
+                            this.props.dispatch(setSummoner(JSON.parse(body_s)));
+                            this.props.dispatch(showPlayerStats());
+                            this.props.dispatch(setRanking(JSON.parse(body_r)));
+                            this.props.dispatch(setHistogram(JSON.parse(body_h)));
+                        });
+                    });
                 });
             }).catch((error) => {
                 this.setState({showSpinner: false});

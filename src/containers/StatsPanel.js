@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import StatsPanel from "../components/StatsPanel";
 
 const mapStateToProps = (state) => {
-    let lastPlayed = new Date(Math.max.apply(Math, Object.values(state.info.data).map((obj) => obj.time)));
+    let lastPlayed = new Date(Math.max.apply(Math, Object.values(state.info.ranking).map((obj) => obj.time)));
     let sincePlayed = (Date.now() - lastPlayed);
 
     let seconds = Math.round(sincePlayed / 1000);
@@ -29,13 +29,13 @@ const mapStateToProps = (state) => {
         sincePlayedString = years.toString() + " year" + (years > 1 ? "s" : "") + " ago";
     }
 
-    let totalPoints = Object.values(state.info.data).map(item => item.points).reduce((prev, next) => prev + next, 0);
-    let masteryScore = Object.values(state.info.data).map(item => item.level).reduce((prev, next) => prev + next, 0);
+    let totalPoints = Object.values(state.info.ranking).map(item => item.points).reduce((prev, next) => prev + next, 0);
+    let masteryScore = Object.values(state.info.ranking).map(item => item.level).reduce((prev, next) => prev + next, 0);
 
     return {
         className: state.render.show == "PLAYER_STATS" ? "show" : "hide",
         server: state.info.server,
-        username: state.info.username,
+        username: state.info.summoner?.summoner?.name ? state.info.summoner.summoner.name : "",
         lastPlayed: sincePlayedString,
         totalPoints,
         masteryScore,

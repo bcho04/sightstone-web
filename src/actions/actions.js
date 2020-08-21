@@ -13,7 +13,8 @@
 
 export const SET_USERNAME           = "SET_USERNAME";
 export const SET_SERVER             = "SET_SERVER";
-export const SET_PLAYER             = "SET_PLAYER";
+export const SET_SUMMONER           = "SET_SUMMONER";
+export const SET_RANKING            = "SET_RANKING";
 export const SET_LEADERBOARD        = "SET_LEADERBOARD";
 export const SET_HISTOGRAM          = "SET_HISTOGRAM";
 export const SHOW_INPUT_FORM        = "SHOW_INPUT_FORM";
@@ -34,10 +35,17 @@ export function setServer(server) {
     };
 }
 
-export function setPlayer(data) {
+export function setSummoner(summoner) {
     return {
-        type: SET_PLAYER,
-        data
+        type: SET_SUMMONER,
+        summoner
+    };
+}
+
+export function setRanking(ranking) {
+    return {
+        type: SET_RANKING,
+        ranking
     };
 }
 

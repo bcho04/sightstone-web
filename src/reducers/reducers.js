@@ -11,9 +11,13 @@ function dataReducer(state={}, action) {
             return Object.assign({}, state, {
                 server: action.server
             });
-        case Actions.SET_PLAYER:
+        case Actions.SET_SUMMONER:
             return Object.assign({}, state, {
-                data: action.data
+                summoner: action.summoner
+            });
+        case Actions.SET_RANKING:
+            return Object.assign({}, state, {
+                ranking: action.ranking
             });
         case Actions.SET_LEADERBOARD:
             return Object.assign({}, state, {
