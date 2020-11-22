@@ -2,6 +2,7 @@ const path    = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const process = require('process');
+require('dotenv').config()
 
 module.exports = {
     mode: process.env.NODE_ENV,
@@ -27,9 +28,9 @@ module.exports = {
                 ],
                 exclude: /node_modules/,
                 loader: "babel-loader",
-                query: {
-                    presets: ["@babel/preset-env", "@babel/preset-react"]
-                }
+                // query: {
+                //     presets: ["@babel/preset-env", "@babel/preset-react"]
+                // }
             }, 
             {
                 test: /\.html$/,
@@ -55,10 +56,14 @@ module.exports = {
         new HtmlWebpackPlugin({hash: true, template: path.resolve(__dirname, "src", "app", "index.html"), filename: path.resolve(__dirname, "dist", "index.html")}),
         // new webpack.DefinePlugin({
         //     'process.env': {
-        //         'NODE_ENV': JSON.stringify('production')
+        //         'NODE_ENV': JSON.stringify('development')
         //     }
         // }),
         // new webpack.optimize.AggressiveMergingPlugin() //Merge chunks 
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+            Buffer: ['buffer', "Buffer"],
+          }),
     ],
     resolve: {
         // options for resolving module requests
@@ -67,16 +72,25 @@ module.exports = {
           "node_modules",
           path.resolve(__dirname, "app")
         ],
+        fallback: { // polyfills for Webpack 5
+            util: require.resolve("util/"),
+            assert: require.resolve("assert"),
+            http: require.resolve("stream-http"),
+            crypto: require.resolve("crypto-browserify"),
+            buffer: require.resolve("buffer/"),
+            zlib: require.resolve("browserify-zlib"),
+            stream: require.resolve("stream-browserify"),
+            https: require.resolve("https-browserify"),
+            path: require.resolve("path-browserify"),
+            fs: false,
+            tls: false,
+            net: false,
+        }
     },
     optimization: {
         minimize: true,
         mergeDuplicateChunks: true,
         removeEmptyChunks: true,
         removeAvailableModules: true
-    },
-    node: {
-        fs: 'empty',
-        net: 'empty',
-        tls: 'empty',
-    },
+    }
 };

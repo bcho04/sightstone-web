@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import FEBE from "../methods/FEBE";
 import Modal from "react-bootstrap/Modal";
 import ChampionMasteryPanel from "../containers/MasteryPanel";
+import { setSummoner, setRanking, setHistogram, showPlayerStats } from "../actions/actions";
 
 class StatsPanel extends React.Component {
     constructor(props) {
@@ -28,17 +29,43 @@ class StatsPanel extends React.Component {
                             <Button text="Update" className="button" disabled={!this.state.updateClickable} onClick={(event) => {
                                 this.setState({updateClickable: false});
 
-                                let update_options = {
+                                let request_options_u = {
                                     server: this.props.server,
                                     username: this.props.username,
                                     type: "update",
                                 };
+                    
+                                let request_options_s = {
+                                    server: this.props.server,
+                                    username: this.props.username,
+                                    type: "summoner",
+                                };
                                 
-                                FEBE.request(update_options).then(() => {
-                                    this.setState({showModal: true});
-                                    this.setState({modalHeader: "Information"});
-                                    this.setState({modalText: "Player data updated successfully."});
-                                    this.setState({updateClickable: true});
+                                let request_options_r = {
+                                    server: this.props.server,
+                                    username: this.props.username,
+                                    type: "mastery/ranking",
+                                };
+                    
+                                let request_options_d = {
+                                    type: "mastery/distribution",
+                                };
+                                
+                                FEBE.request(request_options_u).then(() => {
+                                    FEBE.request(request_options_s).then((body_s) => {
+                                        FEBE.request(request_options_r).then((body_r) => {
+                                            FEBE.request(request_options_d).then((body_h) => {
+                                                this.setState({showModal: true});
+                                                this.setState({modalHeader: "Information"});
+                                                this.setState({modalText: "Player data updated successfully."});
+                                                this.setState({updateClickable: true});
+                                                this.props.dispatch(setSummoner(JSON.parse(body_s)));
+                                                this.props.dispatch(showPlayerStats());
+                                                this.props.dispatch(setRanking(JSON.parse(body_r)));
+                                                this.props.dispatch(setHistogram(JSON.parse(body_h)));
+                                            });
+                                        });
+                                    });
                                 }).catch((error) => {
                                     this.setState({showModal: true, modalHeader: "Error"});
                                     if(error == 500) this.setState({modalText: "There was a server-side error."});
