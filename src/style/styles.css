@@ -45,16 +45,16 @@ html, body {
 .show {
     opacity: 1;
     visibility: visible;
-    transition-duration: 1s;
+    transition-duration: 0.5s;
     transition-timing-function: ease-in-out;
 }
 
 .hide {
     opacity: 0;
     visibility: hidden;
-    transition-duration: 1s;
+    transition-duration: 0.5s;
     transition-timing-function: ease-in-out;
-    height: 0px;
+    height: 0px !important;
 }
 
 .button {
@@ -161,6 +161,7 @@ input[type="text"], textarea {
     background: #f8f9fa;
     padding-top: 10px;
     padding-bottom: 10px;
+    z-index: 4;
 }
 
 .loading-info {
@@ -198,6 +199,33 @@ input[type="text"], textarea {
     width: 100%;
     top: 56px; /* Don't push the canvas down. */
     z-index: 3;
+}
+
+.network {
+    position: absolute;
+    width: 100%;
+    top: 56px;
+    z-index: 2;
+}
+
+.node {
+    color: #606060;
+    font-family: "Exo 2", sans-serif;
+}
+
+.network-spinner {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 5;
+}
+
+.network-instructions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    color: #b0b0b0;
 }
 
 /*

@@ -1,9 +1,10 @@
 import React from "react";
-import Background from "./Background"
+import Background from "../containers/Background"
 import InputForm from "../containers/InputForm";
 import StatsPanel from "../containers/StatsPanel";
 import Navigation from "../containers/Navigation";
 import ChampionPanel from "../containers/ChampionPanel";
+import Network from "../containers/Network"
 import Chart from "chart.js";
 
 class App extends React.Component {
@@ -54,6 +55,9 @@ class App extends React.Component {
                 </div>
                 <div className="screen-center" id="input">
                     <InputForm placeholder="Enter summoner..." />
+                </div>
+                <div className="network" id="network">
+                    <Network />
                 </div>
                 <div className="player-info" id="player-info">
                     <StatsPanel />

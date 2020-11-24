@@ -3,7 +3,7 @@
 {
     username: <string>,
     server: <string>,
-    data: <dict>
+    data: <dict>`
     render: {
         inputForm: <boolean>,
         playerStats: <boolean>
@@ -17,9 +17,12 @@ export const SET_SUMMONER           = "SET_SUMMONER";
 export const SET_RANKING            = "SET_RANKING";
 export const SET_LEADERBOARD        = "SET_LEADERBOARD";
 export const SET_HISTOGRAM          = "SET_HISTOGRAM";
+export const UPDATE_NODES           = "UPDATE_NODES";
+export const UPDATE_LINKS           = "UPDATE_LINKS";
 export const SHOW_INPUT_FORM        = "SHOW_INPUT_FORM";
 export const SHOW_PLAYER_STATS      = "SHOW_PLAYER_STATS";
 export const SHOW_CHAMPION_STATS    = "SHOW_CHAMPION_STATS";
+export const SHOW_NETWORK           = "SHOW_NETWORK";
 
 export function setUsername(username) {
     return {
@@ -63,6 +66,20 @@ export function setHistogram(histogram) {
     }
 }
 
+export function updateNodes(nodes) {
+    return {
+        type: UPDATE_NODES,
+        nodes
+    }
+}
+
+export function updateLinks(links) {
+    return {
+        type: UPDATE_LINKS,
+        links
+    }
+}
+
 export function showInputForm() {
     return {
         type: SHOW_INPUT_FORM
@@ -78,5 +95,11 @@ export function showPlayerStats() {
 export function showChampionStats() {
     return {
         type: SHOW_CHAMPION_STATS
+    };
+}
+
+export function showNetwork() {
+    return {
+        type: SHOW_NETWORK
     };
 }

@@ -3,7 +3,7 @@ import Button from "../components/Button";
 import FEBE from "../methods/FEBE";
 import Modal from "react-bootstrap/Modal";
 import ChampionMasteryPanel from "../containers/MasteryPanel";
-import { setSummoner, setRanking, setHistogram, showPlayerStats } from "../actions/actions";
+import { setSummoner, setRanking, setHistogram, showPlayerStats, showNetwork } from "../actions/actions";
 
 class StatsPanel extends React.Component {
     constructor(props) {
@@ -26,6 +26,11 @@ class StatsPanel extends React.Component {
                         <span>(<b>{this.props.totalPoints}</b> total points | <b>{this.props.masteryScore}</b> mastery score)</span>
                         <div className="user-server-right">
                             <span style={{marginRight: "10px"}}>Last played: <b>{this.props.lastPlayed}</b></span>
+                            <Button text="Back" className="button" disabled={!this.state.updateClickable} onClick={(event) => {
+                                this.props.dispatch(showNetwork());
+                                event.preventDefault();
+                            }} />
+                            <span style={{marginRight: "5px"}} />
                             <Button text="Update" className="button" disabled={!this.state.updateClickable} onClick={(event) => {
                                 this.setState({updateClickable: false});
 

@@ -27,6 +27,20 @@ function dataReducer(state={}, action) {
             return Object.assign({}, state, {
                 histogram: action.histogram
             });
+        case Actions.UPDATE_NODES:
+            return Object.assign({}, state, {
+                network: {
+                    nodes: [... new Set([...state.network.nodes.map((n) => JSON.stringify(n)), ...action.nodes.map((n) => JSON.stringify(n))])].map((n) => JSON.parse(n)),
+                    links: state.network.links
+                }
+            })
+        case Actions.UPDATE_LINKS:
+            return Object.assign({}, state, {
+                network: {
+                    nodes: state.network.nodes,
+                    links: [... new Set([...state.network.links.map((n) => JSON.stringify(n)), ...action.links.map((n) => JSON.stringify(n))])].map((n) => JSON.parse(n)),
+                }
+            })
         default:
             return state;
     }
@@ -45,6 +59,10 @@ function renderReducer(state={}, action) {
         case Actions.SHOW_CHAMPION_STATS:
             return Object.assign({}, state, {
                 show: "CHAMPION_STATS"
+            });
+        case Actions.SHOW_NETWORK:
+            return Object.assign({}, state, {
+                show: "NETWORK"
             });
         default:
             return state;

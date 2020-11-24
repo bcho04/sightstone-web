@@ -31,7 +31,7 @@ class Background extends React.Component {
         renderer.setPixelRatio( window.devicePixelRatio );
         renderer.setSize( window.innerWidth, window.innerHeight );
         renderer.setClearColor( 0xffffff, 0 );
-        document.getElementById("background").appendChild( renderer.domElement );
+        document.getElementById("background-internal").appendChild( renderer.domElement );
         // background
         //scene.background = new THREE.Color( 0xffffff )
         // particles
@@ -113,7 +113,9 @@ class Background extends React.Component {
 
     render() {
         return (
-            <div ref={ref => (this.el = ref)} />
+            <div className={this.props.className} id="background-internal">
+                <div ref={ref => (this.el = ref)} />
+            </div>
         );
     }
 }

@@ -34,6 +34,10 @@ const store = createStore(appReducer, {
         ranking: {},
         leaderboard: {},
         histogram: {},
+        network: {
+            nodes: [],
+            links: [],
+        }
     },
     render: {
         show: "INPUT_FORM"

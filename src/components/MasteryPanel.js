@@ -33,9 +33,6 @@ class MasteryPanel extends React.Component {
             let currentHist = this.props.histogramData[key];
             championTabContent.push(
                 <Tab.Pane eventKey={"#"+key}>
-                    {/* <div style={{zIndex: '3', position: 'absolute', top: '42%', left: '42%'}}>
-                        <h1>{currentObj.pos != -1 ? currentObj.pos.toString() + " / " + currentObj.total.toString() : "Not ranked"}</h1>
-                    </div> */}
                     <DistributionChart champion={key} data={currentHist}
                         rank={currentObj.pos != -1 ? "Rank: " + currentObj.pos.toString() + " / " + currentObj.total.toString() : "not ranked"}
                         lineIndex={Math.min(Math.floor(this.props.championData[key].points/10000), 50)}

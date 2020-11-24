@@ -68,6 +68,7 @@ module.exports = {
     resolve: {
         // options for resolving module requests
         // (does not apply to resolving to loaders)
+        extensions: [".ts", ".tsx", ".js", ".jsx"],
         modules: [
           "node_modules",
           path.resolve(__dirname, "app")
