@@ -3,7 +3,7 @@ import Background from "../components/Background";
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        className: state.render.show == "INPUT_FORM" ? "show" : "hide"
+        className: ["INPUT_FORM", "CHAMPION_STATS"].includes(state.render.show) ? "show" : "hide"
     };
 }
 

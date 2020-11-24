@@ -41,40 +41,23 @@ class NameForm extends React.Component {
                 username: this.props.username,
                 type: "summoner",
             };
-            
-            let request_options_r = {
-                server: this.props.server,
-                username: this.props.username,
-                type: "mastery/ranking",
-            };
-
-            let request_options_d = {
-                type: "mastery/distribution",
-            };
 
             let request_options_n = {
                 server: this.props.server,
                 username: this.props.username,
                 type: "social/frequent",
-            }
+            };
 
             FEBE.request(request_options_u).then(() => {
                 FEBE.request(request_options_s).then((body_s) => {
-                    FEBE.request(request_options_r).then((body_r) => {
-                        FEBE.request(request_options_d).then((body_h) => {
-                            FEBE.request(request_options_n).then((body_n) => {
-                                console.log(body_n);
-                                this.setState({showSpinner: false});
-                                this.setState({alertText: ""});
-                                this.props.dispatch(setSummoner(JSON.parse(body_s)));
-                                // this.props.dispatch(showPlayerStats());
-                                this.props.dispatch(showNetwork());
-                                this.props.dispatch(setRanking(JSON.parse(body_r)));
-                                this.props.dispatch(setHistogram(JSON.parse(body_h)));
-                                this.props.dispatch(updateNodes(JSON.parse(body_n).nodes))
-                                this.props.dispatch(updateLinks(JSON.parse(body_n).links))
-                            });
-                        });
+                    FEBE.request(request_options_n).then((body_n) => {
+                        console.log(body_n);
+                        this.setState({showSpinner: false});
+                        this.setState({alertText: ""});
+                        this.props.dispatch(setSummoner(JSON.parse(body_s)));
+                        this.props.dispatch(showNetwork());
+                        this.props.dispatch(updateNodes(JSON.parse(body_n).nodes));
+                        this.props.dispatch(updateLinks(JSON.parse(body_n).links));
                     });
                 });
             }).catch((error) => {

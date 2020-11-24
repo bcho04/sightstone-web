@@ -3,7 +3,7 @@ import Navigation from "../components/Navigation";
 
 const mapStateToProps = (state) => {
     return {
-        hasSearched: state.render.show != "INPUT_FORM" ? true : false,
+        hasSearched: !(Object.keys(state.info.summoner).length == 0 && state.info.summoner.constructor === Object) ? true : false,
     };
 }
 

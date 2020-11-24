@@ -97,7 +97,7 @@ class Network extends React.Component {
                                 server: node.server,
                                 username: node.id,
                                 type: "social/frequent",
-                            }
+                            };
                 
                             FEBE.request(request_options_u).then(() => {
                                 FEBE.request(request_options_s).then((body_s) => {
@@ -110,8 +110,8 @@ class Network extends React.Component {
                                                 this.props.dispatch(showPlayerStats());
                                                 this.props.dispatch(setRanking(JSON.parse(body_r)));
                                                 this.props.dispatch(setHistogram(JSON.parse(body_h)));
-                                                this.props.dispatch(updateNodes(JSON.parse(body_n).nodes))
-                                                this.props.dispatch(updateLinks(JSON.parse(body_n).links))
+                                                this.props.dispatch(updateNodes(JSON.parse(body_n).nodes));
+                                                this.props.dispatch(updateLinks(JSON.parse(body_n).links));
                                             });
                                         });
                                     });
