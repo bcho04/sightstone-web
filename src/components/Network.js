@@ -28,6 +28,8 @@ class Network extends React.Component {
                     nodeColor={(d) => d.id == this.props.selected ? "#192841": "#10cdde"}
                     linkColor={() => "#666666"}
                     linkOpacity={1}
+                    height={window.innerHeight - 40}
+                    width={window.innerWidth}
                     nodeResolution={16}
                     nodeLabel={d => `<span class="node">${d.id}</span>`}
                     onNodeClick={(node, event) => {

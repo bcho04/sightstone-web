@@ -2,8 +2,8 @@ import React from "react";
 import Button from "../components/Button";
 import FEBE from "../methods/FEBE";
 import Modal from "react-bootstrap/Modal";
-import ChampionMasteryPanel from "../containers/MasteryPanel";
 import { setSummoner, setRanking, setHistogram, showPlayerStats, showNetwork } from "../actions/actions";
+import PlayerTabPanel from "../containers/PlayerTabPanel";
 
 class StatsPanel extends React.Component {
     constructor(props) {
@@ -23,7 +23,7 @@ class StatsPanel extends React.Component {
                     <div className="name-header">
                         <h2>{this.props.username}</h2>
                         <span>{this.props.server}</span>
-                        <span>(<b>{this.props.totalPoints}</b> total points | <b>{this.props.masteryScore}</b> mastery score)</span>
+                        <span>(<b>{this.props.totalPoints}</b> total points | <b>{this.props.masteryScore}</b> mastery score | <b>{this.props.soloRank}</b> solo | <b>{this.props.flexRank}</b> flex)</span>
                         <div className="user-server-right">
                             <span style={{marginRight: "10px"}}>Last played: <b>{this.props.lastPlayed}</b></span>
                             <Button text="Back" className="button" disabled={!this.state.updateClickable} onClick={(event) => {
@@ -89,7 +89,7 @@ class StatsPanel extends React.Component {
                         <Modal.Body>{this.state.modalText}</Modal.Body>
                     </Modal>
                 </div>
-                <ChampionMasteryPanel className="mastery-panel" />
+                <PlayerTabPanel className="player-tab-panel" />
             </div>
         );
     }

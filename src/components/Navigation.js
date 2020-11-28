@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Modal from 'react-bootstrap/Modal';
-import { setLeaderboard, showChampionStats, showNetwork } from '../actions/actions';
+import { setLeaderboard, showChampionStats, showInputForm, showNetwork } from '../actions/actions';
 import FEBE from "../methods/FEBE";
 
 class Navigation extends React.Component {
@@ -19,7 +19,10 @@ class Navigation extends React.Component {
         return (
             <div>
                 <Navbar bg="light" variant="light" fixed="top">
-                    <Navbar.Brand href="index.html"><strong>Sightstone</strong></Navbar.Brand>
+                    <Navbar.Brand onClick={(event) => {
+                        this.props.dispatch(showInputForm());
+                        event.preventDefault();
+                    }}><strong>Sightstone</strong></Navbar.Brand>
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="ml-auto">
                             {/* <Nav.Link onClick={(event) => {

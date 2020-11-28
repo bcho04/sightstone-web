@@ -9,6 +9,9 @@ import Badge from "react-bootstrap/Badge";
 class MasteryPanel extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            champion: "",
+        }
     }
 
     render() {
@@ -20,7 +23,10 @@ class MasteryPanel extends React.Component {
             if (this.props.championData[key].level == 5) variant = "danger";
 
             championPanelList.push(
-                <ListGroup.Item action href={"#"+key}>
+                <ListGroup.Item action onClick={(event) => {
+                    this.setState({champion: key});
+                    event.preventDefault();
+                }}>
                     {key}
                         <Badge variant={variant} style={{float: "right", marginTop: '3px'}}>{this.props.championData[key].points}</Badge>
                 </ListGroup.Item>
@@ -32,7 +38,7 @@ class MasteryPanel extends React.Component {
             let currentObj = this.props.championData[key];
             let currentHist = this.props.histogramData[key];
             championTabContent.push(
-                <Tab.Pane eventKey={"#"+key}>
+                <Tab.Pane active={this.state.champion == key} unmountOnExit={true} className={this.props.className}>
                     <DistributionChart champion={key} data={currentHist}
                         rank={currentObj.pos != -1 ? "Rank: " + currentObj.pos.toString() + " / " + currentObj.total.toString() : "not ranked"}
                         lineIndex={Math.min(Math.floor(this.props.championData[key].points/10000), 50)}
@@ -43,7 +49,7 @@ class MasteryPanel extends React.Component {
 
         return (
             <div id="mastery-panel" className={this.props.className}>
-                <Tab.Container>
+                <Tab.Container unmountOnExit={true}>
                     <Row style={{width: '95vw'}}>
                         <Col xs={2}>
                             <ListGroup variant="flush" className="mastery-panel-lg">
