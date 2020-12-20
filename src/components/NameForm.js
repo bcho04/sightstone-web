@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import async from "async";
 import { setUsername, setServer, setSummoner, setRanking, setHistogram, showPlayerStats, showNetwork, updateNodes, updateLinks } from "../actions/actions";
 import FEBE from "../methods/FEBE";
 import Alert from "react-bootstrap/Alert";
@@ -49,20 +50,24 @@ class NameForm extends React.Component {
             };
 
             FEBE.request(request_options_u).then(() => {
-                FEBE.request(request_options_s).then((body_s) => {
-                    FEBE.request(request_options_n).then((body_n) => {
-                        console.log(body_n);
-                        this.setState({showSpinner: false});
-                        this.setState({alertText: ""});
-                        this.props.dispatch(setSummoner(JSON.parse(body_s)));
-                        this.props.dispatch(showNetwork());
-                        this.props.dispatch(updateNodes(JSON.parse(body_n).nodes));
-                        this.props.dispatch(updateLinks(JSON.parse(body_n).links));
-                    });
+                async.parallel({
+                    body_s: (callback) => {
+                        FEBE.request(request_options_s).then((x) => callback(null, x));
+                    },
+                    body_n: (callback) => {
+                        FEBE.request(request_options_n).then((x) => callback(null, x));
+                    },
+                }).then((results) => {
+                    this.setState({showSpinner: false});
+                    this.setState({alertText: ""});
+                    this.props.dispatch(setSummoner(JSON.parse(results.body_s)));
+                    this.props.dispatch(showNetwork());
+                    this.props.dispatch(updateNodes(JSON.parse(results.body_n).nodes));
+                    this.props.dispatch(updateLinks(JSON.parse(results.body_n).links));
                 });
             }).catch((error) => {
                 this.setState({showSpinner: false});
-                if(error == 404) this.setState({alertText: "Username not found in server. Please check your username spelling and server and try again."});
+                if(error == 404) this.setState({alertText: "Username not found. Please check your username spelling and server and try again."});
                 else if(error == 500) this.setState({alertText: "There was a server-side error."});
                 else this.setState({alertText: "There was an error while attempting this search. Please check your username and server and try again."});
             });

@@ -63,7 +63,7 @@ module.exports = {
         new webpack.ProvidePlugin({
             process: 'process/browser',
             Buffer: ['buffer', "Buffer"],
-          }),
+        }),
     ],
     resolve: {
         // options for resolving module requests
@@ -83,6 +83,7 @@ module.exports = {
             stream: require.resolve("stream-browserify"),
             https: require.resolve("https-browserify"),
             path: require.resolve("path-browserify"),
+            "process/browser": require.resolve("process/browser"),
             fs: false,
             tls: false,
             net: false,

@@ -7,6 +7,9 @@ import App from "../components/App"
 import appReducer from '../reducers/reducers';
 import "../style/styles.css";
 
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+
 /* Redux Definition */
 
 var url = new URL(window.location.href);
@@ -34,10 +37,14 @@ const store = createStore(appReducer, {
         ranking: {},
         leaderboard: {},
         histogram: {},
+        league: {
+            ranking: {},
+            histogram: {},
+        },
         network: {
             nodes: [],
             links: [],
-        }
+        },
     },
     render: {
         show: "INPUT_FORM"

@@ -37,10 +37,14 @@ class MasteryPanel extends React.Component {
         Object.keys(this.props.championData).sort().forEach((key) => {
             let currentObj = this.props.championData[key];
             let currentHist = this.props.histogramData[key];
+            let currentRank = currentObj.pos != -1 ? "Rank: " + currentObj.pos.toString() + " / " + currentObj.total.toString() : "not ranked";
             championTabContent.push(
                 <Tab.Pane active={this.state.champion == key} unmountOnExit={true} className={this.props.className}>
-                    <DistributionChart champion={key} data={currentHist}
-                        rank={currentObj.pos != -1 ? "Rank: " + currentObj.pos.toString() + " / " + currentObj.total.toString() : "not ranked"}
+                    <DistributionChart 
+                        data={currentHist} 
+                        xLabel="Mastery Points" 
+                        title={key + ' Mastery Distribution (' + currentRank + ')'}
+                        rank={currentRank}
                         lineIndex={Math.min(Math.floor(this.props.championData[key].points/10000), 50)}
                     />
                 </Tab.Pane>

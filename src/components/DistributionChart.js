@@ -12,7 +12,6 @@ class DistributionChart extends React.Component {
 
     render() {
         let graph = {
-            // labels: [...Array(41).keys()].map(x => 25000*x),
             datasets: [
                 {
                     label: 'Number of People',
@@ -31,7 +30,7 @@ class DistributionChart extends React.Component {
                     options={{
                         title: {
                             display: true,
-                            text: this.props.champion + ' Mastery Distribution (' + this.props.rank + ')',
+                            text: this.props.title,
                             fontSize: 20,
                         },
                         scales: {
@@ -40,7 +39,7 @@ class DistributionChart extends React.Component {
                                 position: 'bottom',
                                 scaleLabel: {
                                     display: true,
-                                    labelString: 'Mastery Points'
+                                    labelString: this.props.xLabel
                                }
                             }]
                         },

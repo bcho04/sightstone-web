@@ -1,7 +1,8 @@
 import React from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-import MasteryPanel from "../containers/MasteryPanel"
+import MasteryPanel from "../containers/MasteryPanel";
+import RankedPanel from "../containers/Rankedpanel";
 
 class PlayerTabPanel extends React.Component {
     constructor(props) {
@@ -14,6 +15,9 @@ class PlayerTabPanel extends React.Component {
                 <Tabs defaultActiveKey="mastery" id="player-tab-panel">
                     <Tab eventKey="mastery" title="Mastery">
                         <MasteryPanel className="mastery-panel"/>
+                    </Tab>
+                    <Tab eventKey="ranked" title="Ranked">
+                        <RankedPanel className="ranked-panel"/>
                     </Tab>
                 </Tabs>
             </div>

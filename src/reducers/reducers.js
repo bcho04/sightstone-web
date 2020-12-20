@@ -19,6 +19,13 @@ function dataReducer(state={}, action) {
             return Object.assign({}, state, {
                 ranking: action.ranking
             });
+        case Actions.SET_LEAGUE_RANKING:
+            return Object.assign({}, state, {
+                league: {
+                    ranking: action.ranking,
+                    histogram: state.league.histogram
+                }
+            }); 
         case Actions.SET_LEADERBOARD:
             return Object.assign({}, state, {
                 leaderboard: action.leaderboard
@@ -27,6 +34,13 @@ function dataReducer(state={}, action) {
             return Object.assign({}, state, {
                 histogram: action.histogram
             });
+        case Actions.SET_LEAGUE_HISTOGRAM:
+            return Object.assign({}, state, {
+                league: {
+                    ranking: state.league.ranking,
+                    histogram: action.histogram
+                }
+            }); 
         case Actions.UPDATE_NODES:
             return Object.assign({}, state, {
                 network: {

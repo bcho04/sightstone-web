@@ -16,7 +16,9 @@ export const SET_SERVER             = "SET_SERVER";
 export const SET_SUMMONER           = "SET_SUMMONER";
 export const SET_RANKING            = "SET_RANKING";
 export const SET_LEADERBOARD        = "SET_LEADERBOARD";
+export const SET_LEAGUE_RANKING     = "SET_LEAGUE_RANKING";
 export const SET_HISTOGRAM          = "SET_HISTOGRAM";
+export const SET_LEAGUE_HISTOGRAM   = "SET_LEAGUE_HISTOGRAM";
 export const UPDATE_NODES           = "UPDATE_NODES";
 export const UPDATE_LINKS           = "UPDATE_LINKS";
 export const SHOW_INPUT_FORM        = "SHOW_INPUT_FORM";
@@ -52,6 +54,13 @@ export function setRanking(ranking) {
     };
 }
 
+export function setLeagueRanking(ranking) {
+    return {
+        type: SET_LEAGUE_RANKING,
+        ranking
+    };
+}
+
 export function setLeaderboard(leaderboard) {
     return {
         type: SET_LEADERBOARD,
@@ -62,6 +71,13 @@ export function setLeaderboard(leaderboard) {
 export function setHistogram(histogram) {
     return {
         type: SET_HISTOGRAM,
+        histogram
+    }
+}
+
+export function setLeagueHistogram(histogram) {
+    return {
+        type: SET_LEAGUE_HISTOGRAM,
         histogram
     }
 }

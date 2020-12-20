@@ -68,7 +68,7 @@ class App extends React.Component {
                 <div id="footer" className="small-font footer">
                     <footer>
                         <div className="container">
-                            <p>©&nbsp;Brandon Cho 2020. All rights reserved.</p>
+                            <p>©&nbsp;<a href="https://github.com/bcho04">Brandon Cho</a> 2020. All rights reserved.</p>
                             <p>View our <a href="https://github.com/bcho04/sightstone">server</a> and <a href="https://github.com/bcho04/sightstone-web">web</a> source code.</p>
                             <hr></hr>
                             <p>Sightstone isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing<br></br>

@@ -1,10 +1,11 @@
 import React from "react";
 import ForceGraph3D from "react-force-graph-3d";
 import { v4 as uuidv4 } from "uuid";
+import async from "async";
 import Modal from "react-bootstrap/Modal";
 import FEBE from "../methods/FEBE"
 import Spinner from "react-bootstrap/Spinner";
-import { setSummoner, setRanking, setHistogram, updateNodes, updateLinks, showPlayerStats } from "../actions/actions";
+import { setSummoner, setRanking, setHistogram, setLeagueRanking, setLeagueHistogram, updateNodes, updateLinks, showPlayerStats } from "../actions/actions";
 
 class Network extends React.Component {
     constructor(props) {
@@ -94,6 +95,17 @@ class Network extends React.Component {
                             let request_options_d = {
                                 type: "mastery/distribution",
                             };
+
+                            let request_options_rr = {
+                                server: node.server,
+                                username: node.id,
+                                type: "league/ranking",
+                            };
+
+                            let request_options_rd = {
+                                server: node.server,
+                                type: "league/distribution",
+                            };
                 
                             let request_options_n = {
                                 server: node.server,
@@ -102,21 +114,35 @@ class Network extends React.Component {
                             };
                 
                             FEBE.request(request_options_u).then(() => {
-                                FEBE.request(request_options_s).then((body_s) => {
-                                    FEBE.request(request_options_r).then((body_r) => {
-                                        FEBE.request(request_options_d).then((body_h) => {
-                                            FEBE.request(request_options_n).then((body_n) => {
-                                                console.log(body_n);
-                                                this.setState({showSpinner: false});
-                                                this.props.dispatch(setSummoner(JSON.parse(body_s)));
-                                                this.props.dispatch(showPlayerStats());
-                                                this.props.dispatch(setRanking(JSON.parse(body_r)));
-                                                this.props.dispatch(setHistogram(JSON.parse(body_h)));
-                                                this.props.dispatch(updateNodes(JSON.parse(body_n).nodes));
-                                                this.props.dispatch(updateLinks(JSON.parse(body_n).links));
-                                            });
-                                        });
-                                    });
+                                async.parallel({
+                                    body_s: (callback) => {
+                                        FEBE.request(request_options_s).then((x) => callback(null, x));
+                                    },
+                                    body_r: (callback) => {
+                                        FEBE.request(request_options_r).then((x) => callback(null, x));
+                                    },
+                                    body_d: (callback) => {
+                                        FEBE.request(request_options_d).then((x) => callback(null, x));
+                                    },
+                                    body_n: (callback) => {
+                                        FEBE.request(request_options_n).then((x) => callback(null, x));
+                                    },
+                                    body_rr: (callback) => {
+                                        FEBE.request(request_options_rr).then((x) => callback(null, x));
+                                    },
+                                    body_rd: (callback) => {
+                                        FEBE.request(request_options_rd).then((x) => callback(null, x));
+                                    },
+                                }).then((results) => {
+                                    this.setState({showSpinner: false});
+                                    this.props.dispatch(setSummoner(JSON.parse(results.body_s)));
+                                    this.props.dispatch(showPlayerStats());
+                                    this.props.dispatch(setRanking(JSON.parse(results.body_r)));
+                                    this.props.dispatch(setHistogram(JSON.parse(results.body_d)));
+                                    this.props.dispatch(setLeagueRanking(JSON.parse(results.body_rr)));
+                                    this.props.dispatch(setLeagueHistogram(JSON.parse(results.body_rd)));
+                                    this.props.dispatch(updateNodes(JSON.parse(results.body_n).nodes));
+                                    this.props.dispatch(updateLinks(JSON.parse(results.body_n).links));
                                 });
                             }).catch((error) => {
                                 this.setState({showSpinner: false});

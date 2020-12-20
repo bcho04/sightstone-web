@@ -39,6 +39,7 @@ html, body {
     position: absolute;
     width: 100%;
     top: 56px; /* Don't push the canvas down. */
+    height: calc(100% - 56px);
     /* z-index: 2; */
 }
 
@@ -173,12 +174,24 @@ input[type="text"], textarea {
     width: 100%;
 }
 
+.ranked-panel {
+    height: 100%;
+    width: 100%;
+}
+
 .player-tab-panel {
     height: 100%;
     width: 100%;
 }
 
 .mastery-panel-lg {
+    max-height: calc(85vh - 47px);
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: scroll;
+}
+
+.ranked-panel-lg {
     max-height: calc(85vh - 47px);
     margin-top: 10px;
     margin-bottom: 10px;
@@ -231,6 +244,17 @@ input[type="text"], textarea {
     right: 10px;
     z-index: 5;
     color: #b0b0b0;
+}
+
+#player-tab-panel-div {
+    margin-top: 10px;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 /*
