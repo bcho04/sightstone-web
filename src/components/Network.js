@@ -176,9 +176,11 @@ class Network extends React.Component {
                         let newHighlightLinks = new Set();
 
                         if (node) {
-                            newHighlightNodes.add(node.index);
-                            node.neighbors.forEach(neighbor => newHighlightNodes.add(neighbor.index));
-                            node.links.forEach(link => newHighlightLinks.add(link.index));
+                            this.props.network.nodes.filter((n) => n.id == node.id).forEach((node) => {
+                                newHighlightNodes.add(node.index);
+                                node.neighbors?.forEach(neighbor => newHighlightNodes.add(neighbor.index)); // Maybe no neighbors
+                                node.links?.forEach(link => newHighlightLinks.add(link.index)); // Maybe no links
+                            });
                         }
                 
                         this.setState({highlightNodes: newHighlightNodes});

@@ -6,7 +6,7 @@ class FEBE {
             if(options.type === null || options.type === undefined) reject();
 
             let uri = process.env.API_URL;
-            uri += `${options.type}?`;
+            uri += `/${options.type}?`;
             uri += typeof options.server != 'undefined' ? `server=${options.server}` : '';
             uri += typeof options.username != 'undefined' ? `&username=${options.username}` : '';
 

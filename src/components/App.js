@@ -69,10 +69,10 @@ class App extends React.Component {
                             <hr></hr>
                             <p>Sightstone isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing<br></br>
                             League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.<br></br></p>
-                            <ul className="list-inline">
+                            {/* <ul className="list-inline">
                                 <li className="list-inline-item"><a href="index.html">Home</a></li>
                                 <li className="list-inline-item"><a href="legal.html">Legal</a></li>
-                            </ul>
+                            </ul> */}
                         </div>
                     </footer>
                 </div>
