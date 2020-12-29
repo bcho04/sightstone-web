@@ -41,18 +41,11 @@ function dataReducer(state={}, action) {
                     histogram: action.histogram
                 }
             }); 
-        case Actions.UPDATE_NODES:
+        case Actions.UPDATE_NETWORK:
             return Object.assign({}, state, {
                 network: {
-                    nodes: [... new Set([...state.network.nodes.map((n) => JSON.stringify(n)), ...action.nodes.map((n) => JSON.stringify(n))])].map((n) => JSON.parse(n)),
-                    links: state.network.links
-                }
-            })
-        case Actions.UPDATE_LINKS:
-            return Object.assign({}, state, {
-                network: {
-                    nodes: state.network.nodes,
-                    links: [... new Set([...state.network.links.map((n) => JSON.stringify(n)), ...action.links.map((n) => JSON.stringify(n))])].map((n) => JSON.parse(n)),
+                    nodes: [... new Set([...state.network.nodes.map((n) => JSON.stringify(n)), ...action.network.nodes.map((n) => JSON.stringify(n))])].map((n) => JSON.parse(n)),
+                    links: [... new Set([...state.network.links.map((n) => JSON.stringify(n)), ...action.network.links.map((n) => JSON.stringify(n))])].map((n) => JSON.parse(n))
                 }
             })
         default:

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import async from "async";
-import { setUsername, setServer, setSummoner, setRanking, setHistogram, showPlayerStats, showNetwork, updateNodes, updateLinks } from "../actions/actions";
+import { setUsername, setServer, setSummoner, showNetwork, updateNetwork } from "../actions/actions";
 import FEBE from "../methods/FEBE";
 import Alert from "react-bootstrap/Alert";
 import Spinner from "react-bootstrap/Spinner";
@@ -62,8 +62,7 @@ class NameForm extends React.Component {
                     this.setState({alertText: ""});
                     this.props.dispatch(setSummoner(JSON.parse(results.body_s)));
                     this.props.dispatch(showNetwork());
-                    this.props.dispatch(updateNodes(JSON.parse(results.body_n).nodes));
-                    this.props.dispatch(updateLinks(JSON.parse(results.body_n).links));
+                    this.props.dispatch(updateNetwork(JSON.parse(results.body_n)));
                 });
             }).catch((error) => {
                 this.setState({showSpinner: false});

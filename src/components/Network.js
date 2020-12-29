@@ -1,58 +1,69 @@
 import React from "react";
-import ForceGraph3D from "react-force-graph-3d";
-import { v4 as uuidv4 } from "uuid";
+import { ForceGraph2D } from "react-force-graph";
 import async from "async";
 import Modal from "react-bootstrap/Modal";
 import FEBE from "../methods/FEBE"
 import Spinner from "react-bootstrap/Spinner";
-import { setSummoner, setRanking, setHistogram, setLeagueRanking, setLeagueHistogram, updateNodes, updateLinks, showPlayerStats } from "../actions/actions";
+import { setSummoner, setRanking, setHistogram, setLeagueRanking, setLeagueHistogram, updateNetwork, showPlayerStats } from "../actions/actions";
 
 class Network extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            uuid: uuidv4(),
             showModal: false,
             modalHeader: "",
             modalText: "",
             showSpinner: false,
+            clicked: [],
+            highlightNodes: new Set(),
+            highlightLinks: new Set(),
+            hoverNode: null,
         };
     }
 
     render() {
         return (
             <div className={this.props.className}>
-                <ForceGraph3D
+                <ForceGraph2D
                     graphData={this.props.network}
                     backgroundColor="#00000000"
                     showNavInfo={false}
-                    nodeColor={(d) => d.id == this.props.selected ? "#192841": "#10cdde"}
+                    nodeColor={(d) => {
+                        if (d.name == this.props.selected) return "#192841";
+                        else if (this.state.clicked.includes(d.server + " " + d.id)) return "#338fff";
+                        return "#10cdde";
+                    }}
                     linkColor={() => "#666666"}
-                    linkOpacity={1}
+                    linkVisibility={(link) => {
+                        if(this.state.hoverNode == null) return true;
+                        return this.state.highlightLinks.has(link.index) ? true : false;
+                    }}
+                    linkDirectionalParticles={1}
+                    linkDirectionalParticleWidth={(link) => this.state.highlightLinks.has(link.index) ? 4 : 0}
                     height={window.innerHeight - 40}
                     width={window.innerWidth}
                     nodeResolution={16}
-                    nodeLabel={d => `<span class="node">${d.id}</span>`}
+                    nodeLabel={d => `<span class="node">${d.name + " (" + d.server + ")"}</span>`}
                     onNodeClick={(node, event) => {
                         if(window.onLine || navigator.onLine){
                             this.setState({showSpinner: true});
                             let request_options_u = {
                                 server: node.server,
-                                username: node.id,
+                                username: node.name,
                                 type: "update",
                             };
 
                             let request_options_n = {
                                 server: node.server,
-                                username: node.id,
+                                username: node.name,
                                 type: "social/frequent",
                             }
 
                             FEBE.request(request_options_u).then(() => {
                                 FEBE.request(request_options_n).then((body_n) => {
-                                    this.props.dispatch(updateNodes(JSON.parse(body_n).nodes))
-                                    this.props.dispatch(updateLinks(JSON.parse(body_n).links))
+                                    this.props.dispatch(updateNetwork(JSON.parse(body_n)));
                                     this.setState({showSpinner: false});
+                                    this.setState({clicked: this.state.clicked.concat(node.server + " " + node.id)});
                                 });
                             }).catch((error) => {
                                 this.setState({showSpinner: false});
@@ -72,23 +83,23 @@ class Network extends React.Component {
                     }}
 
                     onNodeRightClick={(node, event) => {
-                        this.setState({showSpinner: true});
-                        if(window.onLine || navigator.onLine){
+                        if(window.onLine || navigator.onLine) {
+                            this.setState({showSpinner: true});
                             let request_options_u = {
                                 server: node.server,
-                                username: node.id,
+                                username: node.name,
                                 type: "update",
                             };
                 
                             let request_options_s = {
                                 server: node.server,
-                                username: node.id,
+                                username: node.name,
                                 type: "summoner",
                             };
                             
                             let request_options_r = {
                                 server: node.server,
-                                username: node.id,
+                                username: node.name,
                                 type: "mastery/ranking",
                             };
                 
@@ -98,7 +109,7 @@ class Network extends React.Component {
 
                             let request_options_rr = {
                                 server: node.server,
-                                username: node.id,
+                                username: node.name,
                                 type: "league/ranking",
                             };
 
@@ -109,7 +120,7 @@ class Network extends React.Component {
                 
                             let request_options_n = {
                                 server: node.server,
-                                username: node.id,
+                                username: node.name,
                                 type: "social/frequent",
                             };
                 
@@ -141,8 +152,8 @@ class Network extends React.Component {
                                     this.props.dispatch(setHistogram(JSON.parse(results.body_d)));
                                     this.props.dispatch(setLeagueRanking(JSON.parse(results.body_rr)));
                                     this.props.dispatch(setLeagueHistogram(JSON.parse(results.body_rd)));
-                                    this.props.dispatch(updateNodes(JSON.parse(results.body_n).nodes));
-                                    this.props.dispatch(updateLinks(JSON.parse(results.body_n).links));
+                                    this.props.dispatch(updateNetwork(JSON.parse(results.body_n)));
+                                    this.setState({clicked: this.state.clicked.concat(node.server + " " + node.id)});
                                 });
                             }).catch((error) => {
                                 this.setState({showSpinner: false});
@@ -158,6 +169,34 @@ class Network extends React.Component {
                             this.setState({modalHeader: "Error"});
                             this.setState({modalText: "You are offline. Please reconnect to search."});
                         }
+                    }}
+
+                    onNodeHover={node => {
+                        let newHighlightNodes = new Set();
+                        let newHighlightLinks = new Set();
+
+                        if (node) {
+                            newHighlightNodes.add(node.index);
+                            node.neighbors.forEach(neighbor => newHighlightNodes.add(neighbor.index));
+                            node.links.forEach(link => newHighlightLinks.add(link.index));
+                        }
+                
+                        this.setState({highlightNodes: newHighlightNodes});
+                        this.setState({highlightLinks: newHighlightLinks});
+                        this.setState({hoverNode: node?.index || null});
+                    }}
+
+                    onLinkHover={link => {
+                        let newHighlightNodes = new Set();
+                        let newHighlightLinks = new Set();
+                
+                        if (link) {
+                            newHighlightLinks.add(link.index);
+                            newHighlightNodes.add(link.source.index);
+                            newHighlightNodes.add(link.target.index);
+                        }
+                        this.setState({highlightNodes: newHighlightNodes});
+                        this.setState({highlightLinks: newHighlightLinks});
                     }}
                 />
                 <div className="network-spinner">

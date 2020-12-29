@@ -19,8 +19,7 @@ export const SET_LEADERBOARD        = "SET_LEADERBOARD";
 export const SET_LEAGUE_RANKING     = "SET_LEAGUE_RANKING";
 export const SET_HISTOGRAM          = "SET_HISTOGRAM";
 export const SET_LEAGUE_HISTOGRAM   = "SET_LEAGUE_HISTOGRAM";
-export const UPDATE_NODES           = "UPDATE_NODES";
-export const UPDATE_LINKS           = "UPDATE_LINKS";
+export const UPDATE_NETWORK           = "UPDATE_NETWORK";
 export const SHOW_INPUT_FORM        = "SHOW_INPUT_FORM";
 export const SHOW_PLAYER_STATS      = "SHOW_PLAYER_STATS";
 export const SHOW_CHAMPION_STATS    = "SHOW_CHAMPION_STATS";
@@ -82,17 +81,10 @@ export function setLeagueHistogram(histogram) {
     }
 }
 
-export function updateNodes(nodes) {
+export function updateNetwork(network) {
     return {
-        type: UPDATE_NODES,
-        nodes
-    }
-}
-
-export function updateLinks(links) {
-    return {
-        type: UPDATE_LINKS,
-        links
+        type: UPDATE_NETWORK,
+        network
     }
 }
 

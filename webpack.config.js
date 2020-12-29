@@ -64,6 +64,7 @@ module.exports = {
             process: 'process/browser',
             Buffer: ['buffer', "Buffer"],
         }),
+        new webpack.EnvironmentPlugin(["API_URL"]),
     ],
     resolve: {
         // options for resolving module requests

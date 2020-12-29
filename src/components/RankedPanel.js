@@ -64,7 +64,7 @@ class RankedPanel extends React.Component {
                                     <DistributionChart 
                                         data={this.props.histogram.RANKED_FLEX_SR || []} 
                                         xLabel="Total League Points" 
-                                        title={"Solo/Duo Ranked Distribution (" + flexRank + ")"}
+                                        title={"Flex Ranked Distribution (" + flexRank + ")"}
                                         lineIndex={Math.min(Math.floor(this.props.ranking.RANKED_FLEX_SR?.equivalentRank/50), 90)}
                                     />
                                 </Tab.Pane>
@@ -72,8 +72,6 @@ class RankedPanel extends React.Component {
                         </Col>
                     </Row>
                 </Tab.Container>
-
-                
             </div>
         );
     }
