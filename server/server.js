@@ -4,7 +4,6 @@ const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const minimist = require('minimist');
 const process = require('process');
 const XRegExp = require('xregexp');
 const async = require('async');
@@ -20,7 +19,7 @@ const galeforce = new GaleforceModule({
         key: process.env.RIOT_KEY,
     },
     cache: {
-        type: 'redis',
+        type: process.env.CACHE_TYPE,
         uri: process.env.CACHE_URI,
     },
     'rate-limit': {
@@ -87,7 +86,7 @@ const distPath = path.join(__dirname, '..', 'dist');
 const serverPath = path.join(__dirname);
 
 app.get('/', (req, res) => {
-   res.sendFile(path.join(distPath, 'index.html'));
+   res.sendFile(path.join(serverPath, 'index.html'));
 });
 
 app.get('/js/bundle.js', (req, res) => {

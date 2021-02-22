@@ -60,7 +60,6 @@
   "scripts": {
     "start": "node ./server/server.js",
     "build": "npx webpack --config webpack.config.js",
-    "api": "node ./server/api.js",
-    "full": "node ./server/server.js & node ./server/api.js"
+    "test": "echo \"No test specified\""
   }
 }
