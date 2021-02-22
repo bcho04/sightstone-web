@@ -48,13 +48,13 @@ class StatsPanel extends React.Component {
                                 };
 
                                 let request_options_rr = {
-                                    server: node.server,
-                                    username: node.id,
+                                    server: this.props.server,
+                                    username: this.props.username,
                                     type: "league/ranking",
                                 };
     
                                 let request_options_rd = {
-                                    server: node.server,
+                                    server: this.props.server,
                                     type: "league/distribution",
                                 };
                                 
