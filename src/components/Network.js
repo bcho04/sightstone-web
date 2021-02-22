@@ -1,5 +1,5 @@
 import React from "react";
-import { ForceGraph2D } from "react-force-graph";
+import ForceGraph2D from "react-force-graph-2d";
 import async from "async";
 import Modal from "react-bootstrap/Modal";
 import FEBE from "../methods/FEBE"
