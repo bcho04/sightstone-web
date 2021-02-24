@@ -1,9 +1,9 @@
-import React from "react";
-import Tab from "react-bootstrap/Tab";
-import ListGroup from "react-bootstrap/ListGroup";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
+import React from 'react';
+import Tab from 'react-bootstrap/Tab';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
 
 class ChampionPanel extends React.Component {
     constructor(props) {
@@ -11,33 +11,33 @@ class ChampionPanel extends React.Component {
     }
 
     render() {
-        let championPanelList = [];
+        const championPanelList = [];
         Object.keys(this.props.leaderboard).sort().forEach((key) => {
             championPanelList.push(
-                <ListGroup.Item action href={"#"+key}>
+                <ListGroup.Item action href={`#${key}`}>
                     <center>{key}</center>
-                </ListGroup.Item>
+                </ListGroup.Item>,
             );
         });
 
-        let tableEntries = [];
+        const tableEntries = [];
         Object.keys(this.props.leaderboard).sort().forEach((key) => {
-            let tableListEntries = [];
+            const tableListEntries = [];
             this.props.leaderboard[key].forEach((elem, index) => {
                 tableListEntries.push(
                     <tr>
-                        <td>{index+1}</td>
+                        <td>{index + 1}</td>
                         <td>{elem.name}</td>
                         <td>{elem.server}</td>
                         <td>{elem.masteryPoints}</td>
                         <td>{elem.masteryLevel}</td>
                         <td>{new Date(elem.lastPlayTime).toLocaleString()}</td>
-                    </tr>
+                    </tr>,
                 );
             });
 
             tableEntries.push(
-                <Tab.Pane eventKey={"#"+key} className={this.props.className}>
+                <Tab.Pane eventKey={`#${key}`} className={this.props.className}>
                     <Table striped hover>
                         <thead>
                             <tr>
@@ -53,15 +53,14 @@ class ChampionPanel extends React.Component {
                             {tableListEntries}
                         </tbody>
                     </Table>
-                </Tab.Pane> 
+                </Tab.Pane>,
             );
         });
-        
 
         return (
             <div className={this.props.className}>
                 <Tab.Container>
-                    <Row style={{width: "90vw"}}>
+                    <Row style={{ width: '90vw' }}>
                         <Col xs={2}>
                             <ListGroup variant="flush" className="leaderboard-panel-lg">
                                 {championPanelList}

@@ -1,21 +1,23 @@
-import React from "react";
+import React from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Modal from 'react-bootstrap/Modal';
-import { setLeaderboard, showChampionStats, showInputForm, showNetwork } from '../actions/actions';
-import FEBE from "../methods/FEBE";
+import {
+    setLeaderboard, showChampionStats, showInputForm, showNetwork,
+} from '../actions/actions';
+import FEBE from '../methods/FEBE';
 
 class Navigation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             showModal: false,
-            modalHeader: "",
-            modalText: "",
+            modalHeader: '',
+            modalText: '',
         };
     }
 
-    render(){
+    render() {
         return (
             <div>
                 <Navbar bg="light" variant="light" fixed="top">
@@ -30,19 +32,19 @@ class Navigation extends React.Component {
                                 event.preventDefault();
                             }}>Home</Nav.Link> */}
                             <Nav.Link onClick={(event) => {
-                                if(this.props.hasSearched) {
+                                if (this.props.hasSearched) {
                                     this.props.dispatch(showNetwork());
                                 } else {
-                                    this.setState({showModal: true});
-                                    this.setState({modalHeader: "Information"});
-                                    this.setState({modalText: "Please search for a user before using the Network feature."})
+                                    this.setState({ showModal: true });
+                                    this.setState({ modalHeader: 'Information' });
+                                    this.setState({ modalText: 'Please search for a user before using the Network feature.' });
                                 }
                                 event.preventDefault();
                             }}>Network</Nav.Link>
 
                             <Nav.Link onClick={(event) => {
-                                let request_options = {
-                                    type: "mastery/leaderboard"
+                                const request_options = {
+                                    type: 'mastery/leaderboard',
                                 };
 
                                 FEBE.request(request_options).then((resp) => {
@@ -54,7 +56,7 @@ class Navigation extends React.Component {
                         </Nav>
                     </Navbar.Collapse>
                 </Navbar>
-                <Modal show={this.state.showModal} onHide={() => this.setState({showModal: false})} animation={true}>
+                <Modal show={this.state.showModal} onHide={() => this.setState({ showModal: false })} animation={true}>
                     <Modal.Header closeButton>
                         <Modal.Title>{this.state.modalHeader}</Modal.Title>
                     </Modal.Header>

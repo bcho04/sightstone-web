@@ -1,17 +1,17 @@
-import React from "react";
-import { Line } from "react-chartjs-2";
-import { v4 as uuidv4 } from "uuid";
+import React from 'react';
+import { Line } from 'react-chartjs-2';
+import { v4 as uuidv4 } from 'uuid';
 
 class DistributionChart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             uuid: uuidv4(),
-        }
+        };
     }
 
     render() {
-        let graph = {
+        const graph = {
             datasets: [
                 {
                     label: 'Number of People',
@@ -21,8 +21,8 @@ class DistributionChart extends React.Component {
                     borderColor: 'rgba(0,0,0,1)',
                     borderWidth: 2,
                     data: this.props.data,
-                }
-            ]
+                },
+            ],
         };
         return (
             <div className={this.props.className} id={this.state.uuid}>
@@ -39,9 +39,9 @@ class DistributionChart extends React.Component {
                                 position: 'bottom',
                                 scaleLabel: {
                                     display: true,
-                                    labelString: this.props.xLabel
-                               }
-                            }]
+                                    labelString: this.props.xLabel,
+                                },
+                            }],
                         },
                         lineAtIndex: [this.props.lineIndex],
                     }}

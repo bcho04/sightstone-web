@@ -1,10 +1,10 @@
-import React from "react";
-import InputForm from "../containers/InputForm";
-import StatsPanel from "../containers/StatsPanel";
-import Navigation from "../containers/Navigation";
-import ChampionPanel from "../containers/ChampionPanel";
-import Network from "../containers/Network"
-import Chart from "chart.js";
+import React from 'react';
+import Chart from 'chart.js';
+import InputForm from '../containers/InputForm';
+import StatsPanel from '../containers/StatsPanel';
+import Navigation from '../containers/Navigation';
+import ChampionPanel from '../containers/ChampionPanel';
+import Network from '../containers/Network';
 
 class App extends React.Component {
     render() {
@@ -12,36 +12,36 @@ class App extends React.Component {
 
         // Vertical line plugin from https://stackoverflow.com/questions/30256695/chart-js-drawing-an-arbitrary-vertical-line.
         const verticalLinePlugin = {
-            getLinePosition: function (chart, pointIndex) {
+            getLinePosition(chart, pointIndex) {
                 const meta = chart.getDatasetMeta(0); // first dataset is used to discover X coordinate of a point
-                const data = meta.data;
+                const { data } = meta;
                 return data[pointIndex]._model.x;
             },
-            renderVerticalLine: function (chartInstance, pointIndex) {
+            renderVerticalLine(chartInstance, pointIndex) {
                 const lineLeftOffset = this.getLinePosition(chartInstance, pointIndex);
                 const scale = chartInstance.scales['y-axis-0'];
                 const context = chartInstance.chart.ctx;
-          
+
                 // render vertical line
                 context.beginPath();
                 context.strokeStyle = '#ff0000';
                 context.moveTo(lineLeftOffset, scale.top);
                 context.lineTo(lineLeftOffset, scale.bottom);
                 context.stroke();
-          
+
                 // write label
-                context.fillStyle = "#ff0000";
+                context.fillStyle = '#ff0000';
                 context.textAlign = 'center';
                 // context.fillText('You', lineLeftOffset, 0.03 * (scale.bottom - scale.top) + scale.top);
             },
-          
-            afterDatasetsDraw: function (chart, easing) {
+
+            afterDatasetsDraw(chart, easing) {
                 if (chart.config.options.lineAtIndex) {
-                    chart.config.options.lineAtIndex.forEach(pointIndex => this.renderVerticalLine(chart, pointIndex));
+                    chart.config.options.lineAtIndex.forEach((pointIndex) => this.renderVerticalLine(chart, pointIndex));
                 }
-            }
+            },
         };
-          
+
         Chart.plugins.register(verticalLinePlugin);
 
         return (

@@ -43,7 +43,7 @@ app.use(cors());
 app.use(csp.expressCspHeader({
     policies: {
         'default-src': [csp.NONE],
-    }
+    },
 }));
 
 /* Mongoose model definitions and initialization */
@@ -86,15 +86,15 @@ const distPath = path.join(__dirname, '..', 'dist');
 const serverPath = path.join(__dirname);
 
 app.get('/', (req, res) => {
-   res.sendFile(path.join(serverPath, 'index.html'));
+    res.sendFile(path.join(serverPath, 'index.html'));
 });
 
 app.get('/js/bundle.js', (req, res) => {
     res.sendFile(path.join(distPath, 'bundle.js'));
- });
+});
 
 app.get('/riot.txt', (req, res) => {
-   res.sendFile(path.join(serverPath, 'riot.txt'));
+    res.sendFile(path.join(serverPath, 'riot.txt'));
 });
 
 app.get('/api/update', async (request, response) => {
@@ -108,21 +108,22 @@ app.get('/api/update', async (request, response) => {
     }
 
     // Check if previously updated
-    if (Date.now() - (updateHistory[username + ' ' + server] || 0) < 15 * 60 * 1000) {
-        return response.status(200).json({timeLeft: 15 * 60 * 1000 - (Date.now() - (updateHistory[username + ' ' + server] || 0))}); // rate limiting updates
+    if (Date.now() - (updateHistory[`${username} ${server}`] || 0) < 15 * 60 * 1000) { // Update only once per 15 minutes
+        return response.status(429).json({ timeLeft: 15 * 60 * 1000 - (Date.now() - (updateHistory[`${username} ${server}`] || 0)) }); // rate limiting updates
     }
 
     try {
-        let sd = await galeforce.lol.summoner()
+        const sd = await galeforce.lol.summoner()
             .region(server)
             .name(username)
             .exec();
-        
+
         const data = {
-            summoner: { server: server, ...sd },
+            summoner: { server, ...sd },
             league: await galeforce.lol.league.entries().region(server).summonerId(sd.id).exec(),
             mastery: await galeforce.lol.mastery.list().region(server).summonerId(sd.id).exec(),
-            matchlist: await galeforce.lol.match.list().region(server).accountId(sd.accountId).query({ endIndex: queryLimit || 100 }).exec(),
+            matchlist: await galeforce.lol.match.list().region(server).accountId(sd.accountId).query({ endIndex: queryLimit || 100 })
+                .exec(),
         };
 
         // Upsert data into database.
@@ -133,17 +134,20 @@ app.get('/api/update', async (request, response) => {
 
         await async.each(data.matchlist.matches, async (match) => {
             const matchQuery = { gameId: match.gameId }; // select by match ID
-            const matchData = await galeforce.lol.match.match()
-                .region(match.platformId.toLowerCase())
-                .matchId(match.gameId)
-                .exec();
-            await matchModel.findOneAndUpdate(matchQuery, matchData, options).exec();
+            const exists = (await matchModel.findOne(matchQuery, { _id: 1 })) !== null; // Don't re-upsert already upserted matches
+            if (!exists) {
+                const matchData = await galeforce.lol.match.match()
+                    .region(match.platformId.toLowerCase())
+                    .matchId(match.gameId)
+                    .exec();
+                await matchModel.findOneAndUpdate(matchQuery, matchData, options).exec();
+            }
         });
         response.sendStatus(200);
-        updateHistory[username + ' ' + server] = Date.now();
+        updateHistory[`${username} ${server}`] = Date.now();
     } catch (e) {
         console.log(e);
-        response.sendStatus(e.response?.status || 500);
+        response.sendStatus(parseInt(e.message.split(' ')[e.message.split(' ').length - 1], 10) || 500);
     }
 });
 
@@ -158,35 +162,33 @@ app.get('/api/summoner', async (request, response) => {
 
     try {
         const summonerData = await summonerModel.find({
-            'summoner.name': new RegExp(username.split("").join("\\s*"), 'iu'),
+            'summoner.name': new RegExp(username.split('').join('\\s*'), 'iu'),
             'summoner.server': server,
         }).exec();
         response.status(200).json(summonerData[0]);
     } catch (e) {
         console.log(e);
-        response.sendStatus(e.response?.status || 500);
+        response.sendStatus(e.message.split(' ')[e.message.split(' ').length - 1] || 500);
     }
 });
 
 app.get('/api/mastery/distribution', async (request, response) => {
     try {
-        let responseValue = {};
+        const responseValue = {};
 
         Object.keys(globalMasteryLeaderboard).forEach((champion) => {
             const masteryPoints = globalMasteryLeaderboard[champion].map((item) => item.masteryPoints);
-            let masteryHistogram = new Array(500000/10000 + 1).fill(0);
+            const masteryHistogram = new Array(500000 / 10000 + 1).fill(0);
 
             masteryPoints.forEach((value) => {
-                masteryHistogram[Math.min(Math.floor(value/10000), masteryHistogram.length-1)] += 1;
+                masteryHistogram[Math.min(Math.floor(value / 10000), masteryHistogram.length - 1)] += 1;
             });
-            let xAxis = Array.from(Array(500000/10000 + 1).keys()).map(x => 10000*x);
+            const xAxis = Array.from(Array(500000 / 10000 + 1).keys()).map((x) => 10000 * x);
 
-            let data = xAxis.map((value, index) => {
-                return {
-                    x: value,
-                    y: masteryHistogram[index],
-                }
-            });
+            const data = xAxis.map((value, index) => ({
+                x: value,
+                y: masteryHistogram[index],
+            }));
 
             responseValue[champion] = data;
         });
@@ -199,29 +201,28 @@ app.get('/api/mastery/distribution', async (request, response) => {
 
 function convertToLeaguePoints(tier, rank, leaguePoints) {
     const tierToLeaguePoints = {
-        "IRON": 0,
-        "BRONZE": 400,
-        "SILVER": 800,
-        "GOLD": 1200,
-        "PLATINUM": 1600,
-        "DIAMOND": 2000,
-        "MASTER": 2400,
-        "GRANDMASTER": 2400,
-        "CHALLENGER": 2400,
+        IRON: 0,
+        BRONZE: 400,
+        SILVER: 800,
+        GOLD: 1200,
+        PLATINUM: 1600,
+        DIAMOND: 2000,
+        MASTER: 2400,
+        GRANDMASTER: 2400,
+        CHALLENGER: 2400,
     };
-    
-    const rankToLeaguePoints = {
-        "IV": 0,
-        "III": 100,
-        "II": 200,
-        "I": 300,
-    }
 
-    if(!["MASTER", "GRANDMASTER", "CHALLENGER"].includes(tier)) {
+    const rankToLeaguePoints = {
+        IV: 0,
+        III: 100,
+        II: 200,
+        I: 300,
+    };
+
+    if (!['MASTER', 'GRANDMASTER', 'CHALLENGER'].includes(tier)) {
         return tierToLeaguePoints[tier] + rankToLeaguePoints[rank] + leaguePoints;
-    } else {
-        return tierToLeaguePoints[tier] + leaguePoints;
     }
+    return tierToLeaguePoints[tier] + leaguePoints;
 }
 
 app.get('/api/league/distribution', async (request, response) => {
@@ -233,25 +234,23 @@ app.get('/api/league/distribution', async (request, response) => {
             return response.sendStatus(400);
         }
 
-        let responseValue = {};
-        let binSize = 50;
-        let maxValue = 4500;
+        const responseValue = {};
+        const binSize = 50;
+        const maxValue = 4500;
 
         Object.keys(globalRankedLeaderboard).forEach((queueType) => {
-            const masteryPoints = globalRankedLeaderboard[queueType].filter((x) => x.server == server).map((item) => convertToLeaguePoints(item.tier, item.rank, item.leaguePoints));
-            let masteryHistogram = new Array(maxValue/binSize + 1).fill(0);
+            const masteryPoints = globalRankedLeaderboard[queueType].filter((x) => x.server === server).map((item) => convertToLeaguePoints(item.tier, item.rank, item.leaguePoints));
+            const masteryHistogram = new Array(maxValue / binSize + 1).fill(0);
 
             masteryPoints.forEach((value) => {
-                masteryHistogram[Math.min(Math.floor(value/binSize), masteryHistogram.length-1)] += 1;
+                masteryHistogram[Math.min(Math.floor(value / binSize), masteryHistogram.length - 1)] += 1;
             });
-            let xAxis = Array.from(Array(maxValue/binSize + 1).keys()).map(x => binSize*x);
+            const xAxis = Array.from(Array(maxValue / binSize + 1).keys()).map((x) => binSize * x);
 
-            let data = xAxis.map((value, index) => {
-                return {
-                    x: value,
-                    y: masteryHistogram[index],
-                }
-            });
+            const data = xAxis.map((value, index) => ({
+                x: value,
+                y: masteryHistogram[index],
+            }));
 
             responseValue[queueType] = data;
         });
@@ -310,13 +309,13 @@ app.get('/api/league/ranking', async (request, response) => {
         Object.keys(globalRankedLeaderboard).forEach((ls) => {
             responseValue[ls] = {
                 pos: -1,
-                total: globalRankedLeaderboard[ls].filter((x) => x.server == server).length,
-                tier: "",
-                rank: "",
+                total: globalRankedLeaderboard[ls].filter((x) => x.server === server).length,
+                tier: '',
+                rank: '',
                 leaguePoints: 0,
                 equivalentRank: 0,
             };
-            globalRankedLeaderboard[ls].filter((x) => x.server == server).forEach((item, index) => {
+            globalRankedLeaderboard[ls].filter((x) => x.server === server).forEach((item, index) => {
                 if (item.lowerName === username && item.server === server) {
                     responseValue[ls].pos = index + 1;
                     responseValue[ls].tier = item.tier;
@@ -355,7 +354,7 @@ app.get('/api/social/frequent', async (request, response) => {
     }
 
     const summonerData = await summonerModel.find({
-        'summoner.name': new RegExp(username.split("").join("\\s*"), 'iu'),
+        'summoner.name': new RegExp(username.split('').join('\\s*'), 'iu'),
         'summoner.server': server,
     }).exec();
 
@@ -364,66 +363,56 @@ app.get('/api/social/frequent', async (request, response) => {
         queueId: { $nin: [800, 810, 820, 830, 840, 850] }, // exclude bot games
     }, ['participantIdentities.player.summonerName', 'participantIdentities.player.accountId'].join(' ')).exec();
 
-    const participantByMatch = matchData.map((match) => {
-        return match.participantIdentities;
-    }).flat().map((participant) => {
-        return participant.player;
-    });
+    const participantByMatch = matchData.map((match) => match.participantIdentities).flat().map((participant) => participant.player);
 
     const frequencies = _.countBy(participantByMatch.map((player) => player.accountId));
 
-    const frequents = Object.keys(_.pickBy(frequencies, (value) => {
-        return value >= 2;
-    }));
+    const frequents = Object.keys(_.pickBy(frequencies, (value) => value >= 2));
 
     response.status(200).json({
-        nodes: frequents.map((key) => {
-            return {
-                id: key,
-                name: participantByMatch.find((player) => player.accountId == key).summonerName,
-                server: summonerData[0].summoner.server,
-            }
-        }),
-        links: frequents.map((key) => {
-            return {
-                source: summonerData[0].summoner.accountId,
-                target: key,
-            }
-        }),
+        nodes: frequents.map((key) => ({
+            id: key,
+            name: participantByMatch.find((player) => player.accountId === key).summonerName,
+            server: summonerData[0].summoner.server,
+        })),
+        links: frequents.map((key) => ({
+            source: summonerData[0].summoner.accountId,
+            target: key,
+        })),
     });
 });
 
 async function getRankedLeaderboard(queueTypes) {
     const query = { league: { $elemMatch: { queueType: { $in: queueTypes } } } };
-        const projection = ['summoner.server', 'summoner.name', 'league.queueType', 'league.tier', 'league.rank', 'league.leaguePoints'].join(' ');
-        const filteredData = await summonerModel.find(query, projection).exec();
-        // Restructure filteredData to allow for efficient sorting.
-        const combinedFilteredArray = [];
-        queueTypes.forEach((queueType) => {
-            const filteredArray = [];
-            filteredData.forEach((summonerData) => {
-                const LMDElem = summonerData.league.find((elem) => elem.queueType === queueType);
-                if (typeof LMDElem !== 'undefined') {
-                    const queueType = LMDElem.queueType;
-                    const tier = LMDElem.tier;
-                    const rank = LMDElem.rank;
-                    const leaguePoints = LMDElem.leaguePoints;
+    const projection = ['summoner.server', 'summoner.name', 'league.queueType', 'league.tier', 'league.rank', 'league.leaguePoints'].join(' ');
+    const filteredData = await summonerModel.find(query, projection).exec();
+    // Restructure filteredData to allow for efficient sorting.
+    const combinedFilteredArray = [];
+    queueTypes.forEach((queueType) => {
+        const filteredArray = [];
+        filteredData.forEach((summonerData) => {
+            const LMDElem = summonerData.league.find((elem) => elem.queueType === queueType);
+            if (typeof LMDElem !== 'undefined') {
+                const { queueType } = LMDElem;
+                const { tier } = LMDElem;
+                const { rank } = LMDElem;
+                const { leaguePoints } = LMDElem;
 
-                    filteredArray.push({
-                        name: summonerData.summoner.name,
-                        server: summonerData.summoner.server,
-                        queueType,
-                        tier,
-                        rank,
-                        leaguePoints,
-                    });
-                }
-            });
-
-            filteredArray.sort((a, b) => Math.sign(convertToLeaguePoints(b.tier, b.rank, b.leaguePoints) - convertToLeaguePoints(a.tier, a.rank, a.leaguePoints))); // Reverse order
-            combinedFilteredArray.push(filteredArray);
+                filteredArray.push({
+                    name: summonerData.summoner.name,
+                    server: summonerData.summoner.server,
+                    queueType,
+                    tier,
+                    rank,
+                    leaguePoints,
+                });
+            }
         });
-        return combinedFilteredArray;
+
+        filteredArray.sort((a, b) => Math.sign(convertToLeaguePoints(b.tier, b.rank, b.leaguePoints) - convertToLeaguePoints(a.tier, a.rank, a.leaguePoints))); // Reverse order
+        combinedFilteredArray.push(filteredArray);
+    });
+    return combinedFilteredArray;
 }
 
 async function getMasteryLeaderboard(ids) {
@@ -435,12 +424,12 @@ async function getMasteryLeaderboard(ids) {
     ids.forEach((id) => {
         const filteredArray = [];
         filteredData.forEach((summonerData) => {
-            const LMDElem= summonerData.mastery.find((elem) => elem.championId === id);
+            const LMDElem = summonerData.mastery.find((elem) => elem.championId === id);
             if (typeof LMDElem !== 'undefined') {
                 const champion = LMDElem.championId;
                 const masteryPoints = LMDElem.championPoints;
                 const masteryLevel = LMDElem.championLevel;
-                const lastPlayTime = LMDElem.lastPlayTime;
+                const { lastPlayTime } = LMDElem;
 
                 filteredArray.push({
                     name: summonerData.summoner.name,
@@ -473,7 +462,7 @@ async function updateGlobalLeaderboards(paramChampData) {
     champData = Object.values(paramChampData.data);
 
     const MLB = await getMasteryLeaderboard(champData.map((a) => parseInt(a.key, 10)));
-    
+
     champData.map((a) => a.name).forEach((name, index) => {
         globalMasteryLeaderboard[name] = MLB[index].map((entry) => {
             entry.lowerName = entry.name.toLowerCase().replace(/\s/g, '');
@@ -485,11 +474,11 @@ async function updateGlobalLeaderboards(paramChampData) {
     setTimeout(() => updateGlobalLeaderboards(paramChampData), 1 * 1000); // Wait 1 second to recalculate leaderboard.
 }
 
-(async function() {
+(async function () {
     await mongoose.connect(process.env.MONGODB_URI);
     const champData = await galeforce.ddragon.champion.list().version(process.env.PATCH).locale('en_US').exec();
     await updateGlobalLeaderboards(champData);
-    
+
     console.log('[server] [network]: Listening on port', process.env.PORT);
     app.listen(process.env.PORT);
 }());

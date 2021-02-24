@@ -1,8 +1,8 @@
-import React from "react";
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
-import MasteryPanel from "../containers/MasteryPanel";
-import RankedPanel from "../containers/RankedPanel";
+import React from 'react';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import MasteryPanel from '../containers/MasteryPanel';
+import RankedPanel from '../containers/RankedPanel';
 
 class PlayerTabPanel extends React.Component {
     constructor(props) {
