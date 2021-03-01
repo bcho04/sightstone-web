@@ -41,8 +41,11 @@ const updateHistory = {};
 app.use(helmet());
 app.use(cors());
 app.use(csp.expressCspHeader({
-    policies: {
-        'default-src': [csp.NONE],
+    directives: {
+        'default-src': [csp.SELF, 'localhost:*', 'https://sightstone-web.herokuapp.com'],
+        'script-src': ['localhost:*/js/bundle.js', 'https://sightstone-web.herokuapp.com/js/bundle.js', '\'unsafe-eval\''],
+        'style-src': [csp.SELF, 'maxcdn.bootstrapcdn.com', 'fonts.googleapis.com', '\'unsafe-inline\''],
+        'font-src': ['fonts.gstatic.com'],
     },
 }));
 

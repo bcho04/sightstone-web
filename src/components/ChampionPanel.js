@@ -8,13 +8,19 @@ import Table from 'react-bootstrap/Table';
 class ChampionPanel extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            champion: '',
+        };
     }
 
     render() {
         const championPanelList = [];
         Object.keys(this.props.leaderboard).sort().forEach((key) => {
             championPanelList.push(
-                <ListGroup.Item action href={`#${key}`}>
+                <ListGroup.Item action onClick={(event) => {
+                    this.setState({ champion: key });
+                    event.preventDefault();
+                }}>
                     <center>{key}</center>
                 </ListGroup.Item>,
             );
@@ -37,7 +43,7 @@ class ChampionPanel extends React.Component {
             });
 
             tableEntries.push(
-                <Tab.Pane eventKey={`#${key}`} className={this.props.className}>
+                <Tab.Pane active={this.state.champion === key} className={this.props.className}>
                     <Table striped hover>
                         <thead>
                             <tr>
