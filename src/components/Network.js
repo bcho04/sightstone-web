@@ -150,12 +150,12 @@ class Network extends React.Component {
                                 }).then((results) => {
                                     this.setState({ showSpinner: false });
                                     this.props.dispatch(setSummoner(JSON.parse(results.body_s)));
-                                    this.props.dispatch(showPlayerStats());
                                     this.props.dispatch(setRanking(JSON.parse(results.body_r)));
                                     this.props.dispatch(setHistogram(JSON.parse(results.body_d)));
                                     this.props.dispatch(setLeagueRanking(JSON.parse(results.body_rr)));
                                     this.props.dispatch(setLeagueHistogram(JSON.parse(results.body_rd)));
                                     this.props.dispatch(updateNetwork(JSON.parse(results.body_n)));
+                                    this.props.dispatch(showPlayerStats());
                                     this.setState({ clicked: this.state.clicked.concat(`${node.server} ${node.id}`) });
                                 });
                             }).catch((error) => {

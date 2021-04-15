@@ -101,11 +101,11 @@ class StatsPanel extends React.Component {
                                         this.setState({ modalText: 'Player data updated successfully.' });
                                         this.setState({ updateClickable: true });
                                         this.props.dispatch(setSummoner(JSON.parse(results.body_s)));
-                                        this.props.dispatch(showPlayerStats());
                                         this.props.dispatch(setRanking(JSON.parse(results.body_r)));
                                         this.props.dispatch(setHistogram(JSON.parse(results.body_d)));
                                         this.props.dispatch(setLeagueRanking(JSON.parse(results.body_rr)));
                                         this.props.dispatch(setLeagueHistogram(JSON.parse(results.body_rd)));
+                                        this.props.dispatch(showPlayerStats());
                                     });
                                 }).catch((error) => {
                                     this.setState({ showModal: true, modalHeader: 'Error' });
