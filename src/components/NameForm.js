@@ -16,7 +16,7 @@ class NameForm extends React.Component {
         this.handleServerChange = this.handleServerChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.state = {
-            alertText: '',
+            alertText: 'This is a demo/mock version of the Sightstone website, and does not have API search capabilities.',
             showSpinner: false,
         };
     }
@@ -34,20 +34,20 @@ class NameForm extends React.Component {
         this.setState({ alertText: '' });
         if (window.onLine || navigator.onLine) {
             const request_options_u = {
-                server: this.props.server,
-                username: this.props.username,
+                server: 'na1', // For demo purposes
+                username: 'SSG Xayah',
                 type: 'update',
             };
 
             const request_options_s = {
-                server: this.props.server,
-                username: this.props.username,
+                server: 'na1',
+                username: 'SSG Xayah',
                 type: 'summoner',
             };
 
             const request_options_n = {
-                server: this.props.server,
-                username: this.props.username,
+                server: 'na1',
+                username: 'SSG Xayah',
                 type: 'social/frequent',
             };
 
