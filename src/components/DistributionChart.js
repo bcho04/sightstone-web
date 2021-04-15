@@ -1,5 +1,6 @@
 import React from 'react';
 import Chart from 'chart.js/auto';
+import deepEqual from 'deep-equal';
 import { v4 as uuidv4 } from 'uuid';
 
 class DistributionChart extends React.Component {
@@ -8,9 +9,18 @@ class DistributionChart extends React.Component {
         this.state = {
             uuid: uuidv4(),
         };
+        this.chartRef = null;
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return !deepEqual(nextProps, this.props);
     }
 
     componentDidMount() {
+        if (this.chartRef) {
+            this.chartRef.destroy();
+        }
+
         const ctx = document.getElementById('chart-' + this.state.uuid).getContext('2d');
         const graph = {
             datasets: [
@@ -53,6 +63,12 @@ class DistributionChart extends React.Component {
             data: graph,
             options: options,
         });
+
+        this.chartRef = DistributionChart;
+    }
+
+    componentDidUpdate() {
+        this.componentDidMount();
     }
 
     render() {
