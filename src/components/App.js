@@ -1,5 +1,5 @@
 import React from 'react';
-import Chart from 'chart.js';
+import Chart from 'chart.js/auto';
 import InputForm from '../containers/InputForm';
 import StatsPanel from '../containers/StatsPanel';
 import Navigation from '../containers/Navigation';
@@ -8,19 +8,20 @@ import Network from '../containers/Network';
 
 class App extends React.Component {
     render() {
-        Chart.defaults.global.defaultFontFamily = "'Exo 2'";
+        Chart.defaults.font.family = "'Exo 2'";
 
-        // Vertical line plugin from https://stackoverflow.com/questions/30256695/chart-js-drawing-an-arbitrary-vertical-line.
+        // Vertical line plugin adapted from https://stackoverflow.com/questions/30256695/chart-js-drawing-an-arbitrary-vertical-line.
         const verticalLinePlugin = {
+            id: 'verticalLinePlugin',
             getLinePosition(chart, pointIndex) {
                 const meta = chart.getDatasetMeta(0); // first dataset is used to discover X coordinate of a point
                 const { data } = meta;
-                return data[pointIndex]._model.x;
+                return data[pointIndex].getProps(['x']).x;
             },
             renderVerticalLine(chartInstance, pointIndex) {
                 const lineLeftOffset = this.getLinePosition(chartInstance, pointIndex);
-                const scale = chartInstance.scales['y-axis-0'];
-                const context = chartInstance.chart.ctx;
+                const scale = chartInstance.scales.y;
+                const context = chartInstance.ctx;
 
                 // render vertical line
                 context.beginPath();
@@ -42,7 +43,7 @@ class App extends React.Component {
             },
         };
 
-        Chart.plugins.register(verticalLinePlugin);
+        Chart.register(verticalLinePlugin);
 
         return (
             <div>

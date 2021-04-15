@@ -10,7 +10,7 @@ class RankedPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            view: 'solo',
+            view: '',
         };
     }
 

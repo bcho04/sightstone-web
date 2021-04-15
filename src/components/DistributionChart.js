@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
 import { v4 as uuidv4 } from 'uuid';
 
 class DistributionChart extends React.Component {
@@ -10,11 +10,12 @@ class DistributionChart extends React.Component {
         };
     }
 
-    render() {
+    componentDidMount() {
+        const ctx = document.getElementById('chart-' + this.state.uuid).getContext('2d');
         const graph = {
             datasets: [
                 {
-                    label: 'Number of People',
+                    label: 'Players',
                     fill: true,
                     lineTension: 0.5,
                     backgroundColor: 'rgba(75,192,192,0.5)',
@@ -24,28 +25,40 @@ class DistributionChart extends React.Component {
                 },
             ],
         };
+        const options = {
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    scaleLabel: {
+                        display: true,
+                        labelString: this.props.xLabel,
+                    },
+                },
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: this.props.title,
+                    font: {
+                        size: 20,
+                    },
+                },
+            },
+            lineAtIndex: [this.props.lineIndex],
+        };
+
+        const DistributionChart = new Chart(ctx, {
+            type: 'line',
+            data: graph,
+            options: options,
+        });
+    }
+
+    render() {
         return (
             <div className={this.props.className} id={this.state.uuid}>
-                <Line data={graph}
-                    options={{
-                        title: {
-                            display: true,
-                            text: this.props.title,
-                            fontSize: 20,
-                        },
-                        scales: {
-                            xAxes: [{
-                                type: 'linear',
-                                position: 'bottom',
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: this.props.xLabel,
-                                },
-                            }],
-                        },
-                        lineAtIndex: [this.props.lineIndex],
-                    }}
-                />
+                <canvas id={'chart-' + this.state.uuid} />
             </div>
         );
     }

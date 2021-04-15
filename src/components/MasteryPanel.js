@@ -44,7 +44,6 @@ class MasteryPanel extends React.Component {
                         data={currentHist}
                         xLabel="Mastery Points"
                         title={`${key} Mastery Distribution (${currentRank})`}
-                        rank={currentRank}
                         lineIndex={Math.min(Math.floor(this.props.championData[key].points / 10000), 50)}
                     />
                 </Tab.Pane>,
