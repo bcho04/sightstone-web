@@ -104,7 +104,6 @@ app.get('/riot.txt', (req, res) => {
 app.get('/api/update', async (request, response) => {
     const server = request.query.server?.toString().toLowerCase();
     const username = request.query.username?.toString().toLowerCase().replace(/\s/g, '');
-    const queryLimit = 5;
 
     // Input checks
     if (server === undefined || username === undefined || !(Object.values(galeforce.regions.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
@@ -117,36 +116,7 @@ app.get('/api/update', async (request, response) => {
     }
 
     try {
-        const sd = await galeforce.lol.summoner()
-            .region(server)
-            .name(username)
-            .exec();
-
-        const data = {
-            summoner: { server, ...sd },
-            league: await galeforce.lol.league.entries().region(server).summonerId(sd.id).exec(),
-            mastery: await galeforce.lol.mastery.list().region(server).summonerId(sd.id).exec(),
-            matchlist: await galeforce.lol.match.list().region(server).accountId(sd.accountId).query({ endIndex: queryLimit || 100 })
-                .exec(),
-        };
-
-        // Upsert data into database.
-        const summonerQuery = { 'summoner.puuid': data.summoner.puuid }; // select by unique PUUID
-        const options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-        await summonerModel.findOneAndUpdate(summonerQuery, data, options).exec();
-
-        await async.each(data.matchlist.matches, async (match) => {
-            const matchQuery = { gameId: match.gameId }; // select by match ID
-            const exists = (await matchModel.findOne(matchQuery, { _id: 1 })) !== null; // Don't re-upsert already upserted matches
-            if (!exists) {
-                const matchData = await galeforce.lol.match.match()
-                    .region(match.platformId.toLowerCase())
-                    .matchId(match.gameId)
-                    .exec();
-                await matchModel.findOneAndUpdate(matchQuery, matchData, options).exec();
-            }
-        });
+        // Do not update in demo
         response.sendStatus(200);
         updateHistory[`${username} ${server}`] = Date.now();
     } catch (e) {
@@ -156,8 +126,8 @@ app.get('/api/update', async (request, response) => {
 });
 
 app.get('/api/summoner', async (request, response) => {
-    const server = request.query.server?.toString();
     const username = request.query.username?.toString().toLowerCase().replace(/\s/g, '');
+    const server = request.query.server?.toString();
 
     if (server === undefined || username === undefined || !(Object.values(galeforce.regions.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
         // handle bad input data
@@ -357,33 +327,37 @@ app.get('/api/social/frequent', async (request, response) => {
         return response.sendStatus(400);
     }
 
-    const summonerData = await summonerModel.find({
-        'summoner.name': new RegExp(username.split('').join('\\s*'), 'iu'),
-        'summoner.server': server,
-    }).exec();
-
-    const matchData = await matchModel.find({
-        'participantIdentities.player.accountId': summonerData[0].summoner.accountId,
-        queueId: { $nin: [800, 810, 820, 830, 840, 850] }, // exclude bot games
-    }, ['participantIdentities.player.summonerName', 'participantIdentities.player.accountId'].join(' ')).exec();
-
-    const participantByMatch = matchData.map((match) => match.participantIdentities).flat().map((participant) => participant.player);
-
-    const frequencies = _.countBy(participantByMatch.map((player) => player.accountId));
-
-    const frequents = Object.keys(_.pickBy(frequencies, (value) => value >= 2));
-
-    response.status(200).json({
-        nodes: frequents.map((key) => ({
-            id: key,
-            name: participantByMatch.find((player) => player.accountId === key).summonerName,
-            server: summonerData[0].summoner.server,
-        })),
-        links: frequents.map((key) => ({
-            source: summonerData[0].summoner.accountId,
-            target: key,
-        })),
-    });
+    try {
+        const summonerData = await summonerModel.find({
+            'summoner.name': new RegExp(username.split('').join('\\s*'), 'iu'),
+            'summoner.server': server,
+        }).exec();
+    
+        const matchData = await matchModel.find({
+            'participantIdentities.player.accountId': summonerData[0].summoner.accountId,
+            queueId: { $nin: [800, 810, 820, 830, 840, 850] }, // exclude bot games
+        }, ['participantIdentities.player.summonerName', 'participantIdentities.player.accountId'].join(' ')).exec();
+    
+        const participantByMatch = matchData.map((match) => match.participantIdentities).flat().map((participant) => participant.player);
+    
+        const frequencies = _.countBy(participantByMatch.map((player) => player.accountId));
+    
+        const frequents = Object.keys(_.pickBy(frequencies, (value) => value >= 2));
+    
+        response.status(200).json({
+            nodes: frequents.map((key) => ({
+                id: key,
+                name: participantByMatch.find((player) => player.accountId === key).summonerName,
+                server: summonerData[0].summoner.server,
+            })),
+            links: frequents.map((key) => ({
+                source: summonerData[0].summoner.accountId,
+                target: key,
+            })),
+        });
+    } catch (e) {
+        response.status(500);
+    }
 });
 
 async function getRankedLeaderboard(queueTypes) {
