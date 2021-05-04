@@ -65,6 +65,7 @@ module.exports = {
             Buffer: ['buffer', "Buffer"],
         }),
         new webpack.EnvironmentPlugin(["API_URL"]),
+        new webpack.EnvironmentPlugin(["PATCH"]),
     ],
     resolve: {
         // options for resolving module requests
@@ -85,9 +86,14 @@ module.exports = {
             https: require.resolve("https-browserify"),
             path: require.resolve("path-browserify"),
             "process/browser": require.resolve("process/browser"),
+            console: require.resolve("console-browserify"),
+            vm: require.resolve("vm-browserify"),
+            os: require.resolve("os-browserify/browser"),
             fs: false,
             tls: false,
             net: false,
+            repl: false,
+            module: false,
         }
     },
     optimization: {
@@ -95,5 +101,5 @@ module.exports = {
         mergeDuplicateChunks: true,
         removeEmptyChunks: true,
         removeAvailableModules: true
-    }
+    },
 };

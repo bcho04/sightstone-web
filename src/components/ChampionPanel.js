@@ -16,12 +16,22 @@ class ChampionPanel extends React.Component {
     render() {
         const championPanelList = [];
         Object.keys(this.props.leaderboard).sort().forEach((key) => {
+            let filename = key.toLowerCase().replace('\'', '').replace(/(^\w|\s\w)/g, m => m.toUpperCase()).replace(' ', '').replace('.', '');
+            if(key === 'Wukong') filename = 'MonkeyKing'; // Handle manual exceptions
+            if(key === 'Nunu & Willump') filename = 'Nunu';
+            if(key === 'Rek\'Sai') filename = 'RekSai';
+            if(key === 'Kog\'Maw') filename = 'KogMaw';
+            if(key === 'Jarvan IV') filename = 'JarvanIV';
+
             championPanelList.push(
                 <ListGroup.Item action onClick={(event) => {
                     this.setState({ champion: key });
                     event.preventDefault();
                 }}>
-                    <center>{key}</center>
+                    <center>
+                        <img src={`https://ddragon.leagueoflegends.com/cdn/${process.env.PATCH}/img/champion/${filename}.png`} height='60px' />
+                        <p style={{marginBottom: '0px'}}>{key}</p>
+                    </center>
                 </ListGroup.Item>,
             );
         });
@@ -44,7 +54,7 @@ class ChampionPanel extends React.Component {
 
             tableEntries.push(
                 <Tab.Pane active={this.state.champion === key} className={this.props.className}>
-                    <Table striped hover>
+                    <Table striped hover responsive>
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -63,18 +73,39 @@ class ChampionPanel extends React.Component {
             );
         });
 
+        const splashArtList = [];
+        Object.keys(this.props.leaderboard).sort().forEach((key) => {
+            let filename = key.toLowerCase().replace('\'', '').replace(/(^\w|\s\w)/g, m => m.toUpperCase()).replace(' ', '').replace('.', '');
+            if(key === 'Wukong') filename = 'MonkeyKing'; // Handle manual exceptions
+            if(key === 'Nunu & Willump') filename = 'Nunu';
+            if(key === 'Rek\'Sai') filename = 'RekSai';
+            if(key === 'Kog\'Maw') filename = 'KogMaw';
+            if(key === 'Jarvan IV') filename = 'JarvanIV';
+
+            splashArtList.push(
+                <Tab.Pane active={this.state.champion === key} className={this.props.className}>
+                    <img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${filename}_0.jpg`} />
+                </Tab.Pane>,
+            );
+        });
+
         return (
-            <div className={this.props.className}>
+            <div className={this.props.className} style={{width: Math.max(window.innerWidth, 1000)}}>
                 <Tab.Container>
-                    <Row style={{ width: '90vw' }}>
-                        <Col xs={2}>
+                    <Row>
+                        <Col xs={1.5}>
                             <ListGroup variant="flush" className="leaderboard-panel-lg">
                                 {championPanelList}
                             </ListGroup>
                         </Col>
-                        <Col xs={10}>
+                        <Col>
                             <Tab.Content className="leaderboard-table">
                                 {tableEntries}
+                            </Tab.Content>
+                        </Col>
+                        <Col xs={3}>
+                            <Tab.Content>
+                                {splashArtList}
                             </Tab.Content>
                         </Col>
                     </Row>

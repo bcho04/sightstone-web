@@ -43,8 +43,9 @@ app.use(cors());
 app.use(csp.expressCspHeader({
     directives: {
         'default-src': [csp.SELF, 'localhost:*', 'https://sightstone-web.herokuapp.com'],
-        'script-src': ['localhost:*/js/bundle.js', 'https://sightstone-web.herokuapp.com/js/bundle.js', '\'unsafe-eval\''],
-        'style-src': [csp.SELF, 'maxcdn.bootstrapcdn.com', 'fonts.googleapis.com', '\'unsafe-inline\''],
+        'script-src': [csp.SELF, 'localhost:*/js/bundle.js', 'https://sightstone-web.herokuapp.com/js/bundle.js', '\'unsafe-eval\''],
+        'style-src': [csp.SELF, 'https://cdn.jsdelivr.net', 'fonts.googleapis.com', '\'unsafe-inline\''],
+        'img-src': [csp.SELF, 'localhost:*', 'https://sightstone-web.herokuapp.com', 'https://ddragon.leagueoflegends.com'],
         'font-src': ['fonts.gstatic.com'],
     },
 }));

@@ -7,7 +7,7 @@ import ChampionPanel from '../containers/ChampionPanel';
 import Network from '../containers/Network';
 
 class App extends React.Component {
-    render() {
+    componentDidMount() {
         Chart.defaults.font.family = "'Exo 2'";
 
         // Vertical line plugin adapted from https://stackoverflow.com/questions/30256695/chart-js-drawing-an-arbitrary-vertical-line.
@@ -44,7 +44,9 @@ class App extends React.Component {
         };
 
         Chart.register(verticalLinePlugin);
+    }
 
+    render() {
         return (
             <div>
                 <div className="navbar" id="navbar">
