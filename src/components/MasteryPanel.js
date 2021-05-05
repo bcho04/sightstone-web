@@ -27,13 +27,14 @@ class MasteryPanel extends React.Component {
                     this.setState({ champion: key });
                     event.preventDefault();
                 }}>
-                    {key}
+                    <span>{key}</span>
                     <Badge variant={variant} style={{ float: 'right', marginTop: '3px' }}>{this.props.championData[key].points}</Badge>
                 </ListGroup.Item>,
             );
         });
 
         const championTabContent = [];
+
         Object.keys(this.props.championData).sort().forEach((key) => {
             const currentObj = this.props.championData[key];
             const currentHist = this.props.histogramData[key];

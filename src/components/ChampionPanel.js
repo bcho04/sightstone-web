@@ -13,6 +13,16 @@ class ChampionPanel extends React.Component {
         };
     }
 
+    resize = () => this.forceUpdate();
+
+    componentDidMount() {
+        window.addEventListener('resize', this.resize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resize);
+    }
+
     render() {
         const championPanelList = [];
         Object.keys(this.props.leaderboard).sort().forEach((key) => {
@@ -91,7 +101,7 @@ class ChampionPanel extends React.Component {
 
         return (
             <div className={this.props.className} style={{width: Math.max(window.innerWidth, 1000)}}>
-                <Tab.Container>
+                <Tab.Container unmountOnExit={true}>
                     <Row>
                         <Col xs={1.5}>
                             <ListGroup variant="flush" className="leaderboard-panel-lg">
