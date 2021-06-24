@@ -25,3 +25,4 @@ jobs:
       env:
         CI: true
         API_URL: ''
+        PATCH: ''
