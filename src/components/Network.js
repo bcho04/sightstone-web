@@ -73,6 +73,7 @@ class Network extends React.Component {
                                 this.setState({ showModal: true });
                                 this.setState({ modalHeader: 'Error' });
                                 if (error.statusCode === 404) this.setState({ modalText: 'Username not found in server.' });
+                                else if (error.statusCode === 429) this.setState({ modalText: 'You have sent too many requests in a short period of time. Please wait a few minutes and try again.' });
                                 else if (error.statusCode === 500) this.setState({ modalText: 'There was a server-side error.' });
                                 else this.setState({ modalText: 'There was an error while attempting this search.' });
                             });
@@ -163,6 +164,7 @@ class Network extends React.Component {
                                 this.setState({ showModal: true });
                                 this.setState({ modalHeader: 'Error' });
                                 if (error.statusCode === 404) this.setState({ modalText: 'Username not found in server. Please check your username spelling and server and try again.' });
+                                else if (error.statusCode === 429) this.setState({ modalText: 'You have sent too many requests in a short period of time. Please wait a few minutes and try again.' });
                                 else if (error.statusCode === 500) this.setState({ modalText: 'There was a server-side error.' });
                                 else this.setState({ modalText: 'There was an error while attempting this search. Please check your username and server and try again.' });
                             });

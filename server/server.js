@@ -11,6 +11,7 @@ const _ = require('lodash');
 const GaleforceModule = require('galeforce');
 const mongoose = require('mongoose');
 const csp = require('express-csp-header');
+const rateLimit = require("express-rate-limit");
 require('dotenv').config();
 
 const galeforce = new GaleforceModule({
@@ -35,6 +36,12 @@ const app = express();
 const globalMasteryLeaderboard = {};
 const globalRankedLeaderboard = {};
 const updateHistory = {};
+
+// app.set('trust proxy', 1);
+const limiter = rateLimit(JSON.parse(process.env.EXPRESS_RATE_LIMIT));
+
+//  apply to all requests
+app.use(limiter);
 
 app.use(helmet());
 app.use(cors());

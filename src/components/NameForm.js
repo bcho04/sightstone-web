@@ -69,6 +69,7 @@ class NameForm extends React.Component {
             }).catch((error) => {
                 this.setState({ showSpinner: false });
                 if (error.statusCode === 404) this.setState({ alertText: 'Username not found. Please check your username spelling and server and try again.' });
+                if (error.statusCode === 429) this.setState({ modalText: 'You have sent too many requests in a short period of time. Please wait a few minutes and try again.' });
                 else if (error.statusCode === 500) this.setState({ alertText: 'There was a server-side error.' });
                 else this.setState({ alertText: 'There was an error while attempting this search. Please check your username and server and try again.' });
             });
