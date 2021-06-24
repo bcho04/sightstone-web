@@ -9,7 +9,6 @@ const XRegExp = require('xregexp');
 const async = require('async');
 const _ = require('lodash');
 const GaleforceModule = require('galeforce');
-const Bluebird = require('bluebird');
 const mongoose = require('mongoose');
 const csp = require('express-csp-header');
 require('dotenv').config();
@@ -18,15 +17,14 @@ const galeforce = new GaleforceModule({
     'riot-api': {
         key: process.env.RIOT_KEY,
     },
-    cache: {
-        type: process.env.CACHE_TYPE,
-        uri: process.env.CACHE_URI,
-    },
+    
     'rate-limit': {
-        prefix: 'riotapi-ratelimit-',
-        intervals: {
-            120: 100,
-            1: 20,
+        cache: {
+            type: process.env.CACHE_TYPE,
+            uri: process.env.CACHE_URI,
+        },
+        options: {
+            intervals: JSON.parse(process.env.RATE_LIMIT_INTERVALS),
         },
     },
     debug: ['riot-api'],
@@ -107,7 +105,7 @@ app.get('/api/update', async (request, response) => {
     const queryLimit = 5;
 
     // Input checks
-    if (server === undefined || username === undefined || !(Object.values(galeforce.regions.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
+    if (server === undefined || username === undefined || !(Object.values(galeforce.region.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
         return response.sendStatus(400); // handle bad input data
     }
 
@@ -159,7 +157,7 @@ app.get('/api/summoner', async (request, response) => {
     const server = request.query.server?.toString();
     const username = request.query.username?.toString().toLowerCase().replace(/\s/g, '');
 
-    if (server === undefined || username === undefined || !(Object.values(galeforce.regions.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
+    if (server === undefined || username === undefined || !(Object.values(galeforce.region.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
         // handle bad input data
         return response.sendStatus(400);
     }
@@ -233,7 +231,7 @@ app.get('/api/league/distribution', async (request, response) => {
     try {
         const server = request.query.server?.toString();
 
-        if (server === undefined || !(Object.values(galeforce.regions.lol).includes(server))) {
+        if (server === undefined || !(Object.values(galeforce.region.lol).includes(server))) {
             // handle bad input data
             return response.sendStatus(400);
         }
@@ -271,7 +269,7 @@ app.get('/api/mastery/ranking', async (request, response) => {
         const username = request.query.username?.toString().toLowerCase().replace(/\s/g, '');
         const server = request.query.server?.toString();
 
-        if (server === undefined || username === undefined || !(Object.values(galeforce.regions.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
+        if (server === undefined || username === undefined || !(Object.values(galeforce.region.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
             return response.sendStatus(400); // handle bad input data
         }
 
@@ -305,7 +303,7 @@ app.get('/api/league/ranking', async (request, response) => {
         const username = request.query.username?.toString().toLowerCase().replace(/\s/g, '');
         const server = request.query.server?.toString();
 
-        if (server === undefined || username === undefined || !(Object.values(galeforce.regions.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
+        if (server === undefined || username === undefined || !(Object.values(galeforce.region.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
             return response.sendStatus(400); // handle bad input data
         }
 
@@ -352,7 +350,7 @@ app.get('/api/social/frequent', async (request, response) => {
     const server = request.query.server?.toString();
     const username = request.query.username?.toString().toLowerCase().replace(/\s/g, '');
 
-    if (server === undefined || username === undefined || !(Object.values(galeforce.regions.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
+    if (server === undefined || username === undefined || !(Object.values(galeforce.region.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
         // handle bad input data
         return response.sendStatus(400);
     }
@@ -480,7 +478,7 @@ async function updateGlobalLeaderboards(paramChampData) {
 
 (async function () {
     await mongoose.connect(process.env.MONGODB_URI);
-    const champData = await galeforce.ddragon.champion.list().version(process.env.PATCH).locale('en_US').exec();
+    const champData = await galeforce.lol.ddragon.champion.list().version(process.env.PATCH).locale('en_US').exec();
     await updateGlobalLeaderboards(champData);
 
     console.log('[server] [network]: Listening on port', process.env.PORT);

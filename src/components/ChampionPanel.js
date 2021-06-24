@@ -93,7 +93,7 @@ class ChampionPanel extends React.Component {
             if(key === 'Jarvan IV') filename = 'JarvanIV';
 
             splashArtList.push(
-                <Tab.Pane active={this.state.champion === key} className={this.props.className}>
+                <Tab.Pane active={this.state.champion === key} className={this.props.className} style={{ paddingTop: '12px' }}>
                     <img src={`https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${filename}_0.jpg`} />
                 </Tab.Pane>,
             );
