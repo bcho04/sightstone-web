@@ -109,7 +109,7 @@ app.get('/riot.txt', (req, res) => {
 app.get('/api/update', async (request, response) => {
     const server = request.query.server?.toString().toLowerCase();
     const username = request.query.username?.toString().toLowerCase().replace(/\s/g, '');
-    const queryLimit = 5;
+    const queryLimit = parseInt(process.env.MATCH_QUERY_END_INDEX, 10);
 
     // Input checks
     if (server === undefined || username === undefined || !(Object.values(galeforce.region.lol).includes(server)) || !(XRegExp('^[0-9\\p{L} _\\.]+$').test(username))) {
