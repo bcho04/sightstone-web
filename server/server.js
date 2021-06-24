@@ -89,6 +89,19 @@ const summonerSchema = new mongoose.Schema({
 
 const summonerModel = mongoose.model('Summoner', summonerSchema);
 
+const metricsSchema = new mongoose.Schema({
+    endpoint: String,
+    time: Date,
+}, { strict: false });
+
+const metricsModel = mongoose.model('Metrics', metricsSchema);
+
+const viewsSchema = new mongoose.Schema({
+    time: Date,
+}, { strict: false });
+
+const viewsModel = mongoose.model('Views', viewsSchema);
+
 /* Server endpoint handlers */
 
 const distPath = path.join(__dirname, '..', 'dist');
@@ -96,6 +109,7 @@ const serverPath = path.join(__dirname);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(serverPath, 'index.html'));
+    viewsModel.create({ time: Date.now() });
 });
 
 app.get('/js/bundle.js', (req, res) => {
@@ -126,6 +140,8 @@ app.get('/api/update', async (request, response) => {
             .region(server)
             .name(username)
             .exec();
+        
+        await metricsModel.create({ endpoint: 'summoner', time: Date.now() });
 
         const data = {
             summoner: { server, ...sd },
@@ -134,6 +150,12 @@ app.get('/api/update', async (request, response) => {
             matchlist: await galeforce.lol.match.list().region(server).accountId(sd.accountId).query({ endIndex: queryLimit || 100 })
                 .exec(),
         };
+
+        await metricsModel.insertMany([
+            { endpoint: 'league', time: Date.now() },
+            { endpoint: 'mastery', time: Date.now() },
+            { endpoint: 'matchlist', time: Date.now() },
+        ]);
 
         // Upsert data into database.
         const summonerQuery = { 'summoner.puuid': data.summoner.puuid }; // select by unique PUUID
@@ -150,6 +172,7 @@ app.get('/api/update', async (request, response) => {
                     .matchId(match.gameId)
                     .exec();
                 await matchModel.findOneAndUpdate(matchQuery, matchData, options).exec();
+                await metricsModel.create({ endpoint: 'match', time: Date.now() });
             }
         });
         response.sendStatus(200);
