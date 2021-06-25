@@ -21,13 +21,27 @@ class Network extends React.Component {
             highlightLinks: new Set(),
             hoverNode: null,
         };
+
+        this.network = {
+            nodes: [],
+            links: [],
+        };
     }
 
     render() {
+        const newNodes = this.props.network.nodes.filter(({ id: id1 }) => !this.network.nodes.some(({ id: id2 }) => id2 === id1)); // add nodes in props but not state
+        const newLinks = this.props.network.links.filter(({ source: source1, target: target1 }) => !this.network.links.some(({ source: source2, target: target2 }) => source1 === source2 && target1 === target2));
+        if (newNodes.length !== 0 || newLinks.length !== 0) {
+            this.network = {
+                nodes: [...this.network.nodes, ...newNodes],
+                links: [...this.network.links, ...newLinks],
+            };
+        }
+
         return (
             <div className={this.props.className}>
                 <ForceGraph2D
-                    graphData={this.props.network}
+                    graphData={this.network}
                     backgroundColor="#00000000"
                     showNavInfo={false}
                     nodeColor={(d) => {
