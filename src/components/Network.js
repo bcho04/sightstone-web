@@ -7,6 +7,7 @@ import FEBE from '../methods/FEBE';
 import {
     setSummoner, setRanking, setHistogram, setLeagueRanking, setLeagueHistogram, updateNetwork, showPlayerStats,
 } from '../actions/actions';
+import _ from 'lodash';
 
 class Network extends React.Component {
     constructor(props) {
@@ -17,7 +18,6 @@ class Network extends React.Component {
             modalText: '',
             showSpinner: false,
             clicked: [],
-            highlightNodes: new Set(),
             highlightLinks: new Set(),
             hoverNode: null,
         };
@@ -30,7 +30,10 @@ class Network extends React.Component {
 
     render() {
         const newNodes = this.props.network.nodes.filter(({ id: id1 }) => !this.network.nodes.some(({ id: id2 }) => id2 === id1)); // add nodes in props but not state
-        const newLinks = this.props.network.links.filter(({ source: source1, target: target1 }) => !this.network.links.some(({ source: source2, target: target2 }) => source1 === source2 && target1 === target2));
+        const newLinks = _.differenceWith(this.props.network.links, this.network.links, (l1, l2) => {
+            return ((l1.source.id || l1.source) === (l2.source.id || l2.source) && (l1.target.id || l1.target) === (l2.target.id || l2.target)) || 
+                ((l1.source.id || l1.source) === (l2.target.id || l2.target) && (l1.target.id || l1.target) === (l2.source.id || l2.source));
+        });
         if (newNodes.length !== 0 || newLinks.length !== 0) {
             this.network = {
                 nodes: [...this.network.nodes, ...newNodes],
@@ -89,7 +92,7 @@ class Network extends React.Component {
                                 if (error.statusCode === 404) this.setState({ modalText: 'Username not found in server.' });
                                 else if (error.statusCode === 429) this.setState({ modalText: 'You have sent too many requests in a short period of time. Please wait a few minutes and try again.' });
                                 else if (error.statusCode === 500) this.setState({ modalText: 'There was a server-side error.' });
-                                else this.setState({ modalText: 'There was an error while attempting this search.' });
+                                else this.setState({ modalText: 'There was an error while attempting this search. Please try again.' });
                             });
                         } else {
                             this.setState({ showSpinner: false });
@@ -177,10 +180,10 @@ class Network extends React.Component {
                                 this.setState({ showSpinner: false });
                                 this.setState({ showModal: true });
                                 this.setState({ modalHeader: 'Error' });
-                                if (error.statusCode === 404) this.setState({ modalText: 'Username not found in server. Please check your username spelling and server and try again.' });
+                                if (error.statusCode === 404) this.setState({ modalText: 'Username not found in server.' });
                                 else if (error.statusCode === 429) this.setState({ modalText: 'You have sent too many requests in a short period of time. Please wait a few minutes and try again.' });
                                 else if (error.statusCode === 500) this.setState({ modalText: 'There was a server-side error.' });
-                                else this.setState({ modalText: 'There was an error while attempting this search. Please check your username and server and try again.' });
+                                else this.setState({ modalText: 'There was an error while attempting this search. Please try again.' });
                             });
                         } else {
                             this.setState({ showSpinner: false });
@@ -191,32 +194,26 @@ class Network extends React.Component {
                     }}
 
                     onNodeHover={(node) => {
-                        const newHighlightNodes = new Set();
                         const newHighlightLinks = new Set();
 
                         if (node) {
-                            this.props.network.nodes.filter((n) => n.id === node.id).forEach((node) => {
-                                newHighlightNodes.add(node.index);
-                                node.neighbors?.forEach((neighbor) => newHighlightNodes.add(neighbor.index)); // Maybe no neighbors
-                                node.links?.forEach((link) => newHighlightLinks.add(link.index)); // Maybe no links
+                            this.network.links.forEach((link) => {
+                                if (link.source.id === node.id || link.target.id === node.id) {
+                                    newHighlightLinks.add(link.index);
+                                }
                             });
                         }
 
-                        this.setState({ highlightNodes: newHighlightNodes });
                         this.setState({ highlightLinks: newHighlightLinks });
                         this.setState({ hoverNode: node?.index || null });
                     }}
 
                     onLinkHover={(link) => {
-                        const newHighlightNodes = new Set();
                         const newHighlightLinks = new Set();
 
                         if (link) {
                             newHighlightLinks.add(link.index);
-                            newHighlightNodes.add(link.source.index);
-                            newHighlightNodes.add(link.target.index);
                         }
-                        this.setState({ highlightNodes: newHighlightNodes });
                         this.setState({ highlightLinks: newHighlightLinks });
                     }}
                 />

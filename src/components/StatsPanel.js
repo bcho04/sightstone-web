@@ -74,7 +74,6 @@ class StatsPanel extends React.Component {
                                     if (response_u.statusCode === 429) {
                                         this.setState({ showModal: true });
                                         this.setState({ modalHeader: 'Error' });
-                                        console.log(response_u);
                                         this.setState({ modalText: `Already updated. Please try again in ${Math.floor(parseInt(response_u.timeLeft) / 1000)} seconds.` });
                                         this.setState({ updateClickable: true });
                                         return;
@@ -109,7 +108,6 @@ class StatsPanel extends React.Component {
                                     });
                                 }).catch((error) => {
                                     this.setState({ showModal: true, modalHeader: 'Error' });
-                                    console.log(error);
                                     if (error.statusCode === 429) this.setState({ modalText: 'You have sent too many requests in a short period of time. Please wait a few minutes and try again.' });
                                     if (error.statusCode === 500) this.setState({ modalText: 'There was a server-side error.' });
                                     else this.setState({ modalText: 'There was an error while connecting. Please try again later.' });

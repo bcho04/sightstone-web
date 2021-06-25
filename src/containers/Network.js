@@ -8,13 +8,13 @@ const mapStateToProps = (state) => {
         const b = propNetwork.nodes.find((node) => node.id === link.target);
         !a.neighbors && (a.neighbors = []);
         !b.neighbors && (b.neighbors = []);
-        a.neighbors.push(JSON.parse(JSON.stringify(b)));
-        b.neighbors.push(JSON.parse(JSON.stringify(a)));
+        a.neighbors.push(b);
+        b.neighbors.push(a);
 
         !a.links && (a.links = []);
         !b.links && (b.links = []);
-        a.links.push(JSON.parse(JSON.stringify(link)));
-        b.links.push(JSON.parse(JSON.stringify(link)));
+        a.links.push(link);
+        b.links.push(link);
     });
 
     return {
