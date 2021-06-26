@@ -194,7 +194,7 @@ app.get('/api/summoner', async (request, response) => {
 
     try {
         const summonerData = await summonerModel.find({
-            'summoner.name': new RegExp(username.split('').join('\\s*'), 'iu'),
+            'summoner.name': new RegExp('^' + username.split('').join('\\s*') + '$', 'iu'),
             'summoner.server': server,
         }).exec();
         response.status(200).json(summonerData[0]);
@@ -386,7 +386,7 @@ app.get('/api/social/frequent', async (request, response) => {
     }
 
     const summonerData = await summonerModel.find({
-        'summoner.name': new RegExp(username.split('').join('\\s*'), 'iu'),
+        'summoner.name': new RegExp('^' + username.split('').join('\\s*') + '$', 'iu'),
         'summoner.server': server,
     }).exec();
 
