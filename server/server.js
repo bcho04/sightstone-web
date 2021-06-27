@@ -408,6 +408,7 @@ app.get('/api/social/frequent', async (request, response) => {
         links: frequents.map((key) => ({
             source: summonerData[0].summoner.accountId,
             target: key,
+            games: frequencies[key],
         })),
     });
 });

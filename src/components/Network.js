@@ -57,6 +57,8 @@ class Network extends React.Component {
                         if (this.state.hoverNode === null) return true;
                         return !!this.state.highlightLinks.has(link.index);
                     }}
+                    linkLabel={(link) => `<span class="node">${link.source.name} – ${link.target.name}<br>${link.games} shared games</span>`}
+                    linkWidth={(link) => Math.min(6, Math.max(1, link.games * (1/3)))}
                     linkDirectionalParticles={1}
                     linkDirectionalParticleWidth={(link) => (this.state.highlightLinks.has(link.index) ? 4 : 0)}
                     height={window.innerHeight - 40}
