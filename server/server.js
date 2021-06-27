@@ -397,7 +397,7 @@ app.get('/api/social/frequent', async (request, response) => {
 
     const frequencies = _.countBy(participantByMatch.map((player) => player.accountId));
 
-    const frequents = Object.keys(_.pickBy(frequencies, (value) => value >= 2));
+    const frequents = Object.keys(_.pickBy(frequencies, (value) => value >= parseInt(process.env.MIN_GAMES, 10)));
 
     response.status(200).json({
         nodes: frequents.map((key) => ({
