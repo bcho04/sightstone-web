@@ -141,42 +141,40 @@ app.get('/api/update', async (request, response) => {
             .name(username)
             .exec();
         
-        await metricsModel.create({ endpoint: 'summoner', time: Date.now() });
+        metricsModel.create({ endpoint: 'summoner', time: Date.now() });
 
-        const data = {
-            summoner: { server, ...sd },
-            league: await galeforce.lol.league.entries().region(server).summonerId(sd.id).exec(),
-            mastery: await galeforce.lol.mastery.list().region(server).summonerId(sd.id).exec(),
-            matchlist: await galeforce.lol.match.list().region(server).accountId(sd.accountId).query({ endIndex: queryLimit || 100 })
-                .exec(),
-        };
+        async.parallel({
+            summoner: (callback) => callback(null, { server, ...sd }),
+            league: (callback) => galeforce.lol.league.entries().region(server).summonerId(sd.id).exec().then((data) => callback(null, data)),
+            mastery: (callback) => galeforce.lol.mastery.list().region(server).summonerId(sd.id).exec().then((data) => callback(null, data)),
+            matchlist: (callback) => galeforce.lol.match.list().region(server).accountId(sd.accountId).query({ endIndex: queryLimit || 100 }).exec().then((data) => callback(null, data)),      
+        }, async (err, data) => {
+            metricsModel.insertMany([
+                { endpoint: 'league', time: Date.now() },
+                { endpoint: 'mastery', time: Date.now() },
+                { endpoint: 'matchlist', time: Date.now() },
+            ]);
+            // Upsert data into database.
+            const summonerQuery = { 'summoner.puuid': data.summoner.puuid }; // select by unique PUUID
+            const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
-        await metricsModel.insertMany([
-            { endpoint: 'league', time: Date.now() },
-            { endpoint: 'mastery', time: Date.now() },
-            { endpoint: 'matchlist', time: Date.now() },
-        ]);
+            await summonerModel.findOneAndUpdate(summonerQuery, data, options).exec();
 
-        // Upsert data into database.
-        const summonerQuery = { 'summoner.puuid': data.summoner.puuid }; // select by unique PUUID
-        const options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-        await summonerModel.findOneAndUpdate(summonerQuery, data, options).exec();
-
-        await async.each(data.matchlist.matches, async (match) => {
-            const matchQuery = { gameId: match.gameId }; // select by match ID
-            const exists = (await matchModel.findOne(matchQuery, { _id: 1 })) !== null; // Don't re-upsert already upserted matches
-            if (!exists) {
-                const matchData = await galeforce.lol.match.match()
-                    .region(match.platformId.toLowerCase())
-                    .matchId(match.gameId)
-                    .exec();
-                await matchModel.findOneAndUpdate(matchQuery, matchData, options).exec();
-                await metricsModel.create({ endpoint: 'match', time: Date.now() });
-            }
+            await async.each(data.matchlist.matches, async (match) => {
+                const matchQuery = { gameId: match.gameId }; // select by match ID
+                const exists = (await matchModel.findOne(matchQuery, { _id: 1 })) !== null; // Don't re-upsert already upserted matches
+                if (!exists) {
+                    metricsModel.create({ endpoint: 'match', time: Date.now() });
+                    const matchData = await galeforce.lol.match.match()
+                        .region(match.platformId.toLowerCase())
+                        .matchId(match.gameId)
+                        .exec();
+                    await matchModel.findOneAndUpdate(matchQuery, matchData, options).exec();
+                }
+            });
+            response.sendStatus(200);
+            updateHistory[`${username} ${server}`] = Date.now();
         });
-        response.sendStatus(200);
-        updateHistory[`${username} ${server}`] = Date.now();
     } catch (e) {
         console.log(e);
         response.sendStatus(parseInt(e.message.split(' ')[e.message.split(' ').length - 1], 10) || 500);
