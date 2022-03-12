@@ -37,6 +37,20 @@ const globalMasteryLeaderboard = {};
 const globalRankedLeaderboard = {};
 const updateHistory = {};
 
+const LeagueToRiotRegion = {
+    'br1': galeforce.region.riot.AMERICAS, 
+    'eun1': galeforce.region.riot.EUROPE,
+    'euw1': galeforce.region.riot.EUROPE,
+    'kr1': galeforce.region.riot.ASIA,
+    'la1': galeforce.region.riot.AMERICAS,
+    'la2': galeforce.region.riot.AMERICAS,
+    'na1': galeforce.region.riot.AMERICAS,
+    'oc1': galeforce.region.riot.AMERICAS,
+    'ru': galeforce.region.riot.EUROPE,
+    'tr1': galeforce.region.riot.EUROPE,
+    'jp1': galeforce.region.riot.ASIA,
+}
+
 // app.set('trust proxy', 1);
 const limiter = rateLimit(JSON.parse(process.env.EXPRESS_RATE_LIMIT));
 
@@ -62,20 +76,12 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', false);
 
 const matchSchema = new mongoose.Schema({
-    gameId: Number,
-    gameCreation: Number,
-    gameDuration: Number,
-    gameMode: String,
-    gameType: String,
-    gameVersion: String,
-    mapId: Number,
-    participantIdentities: [],
-    participants: [],
-    platformId: String,
-    queueId: String,
-    seasonId: String,
-    teams: [],
-    timeline: [],
+    info: Object,
+    metadata: {
+        dataVersion: String,
+        matchId: String,
+        participants: [String],
+    }
 }, { strict: false });
 
 const matchModel = mongoose.model('Match', matchSchema);
@@ -147,7 +153,7 @@ app.get('/api/update', async (request, response) => {
             summoner: (callback) => callback(null, { server, ...sd }),
             league: (callback) => galeforce.lol.league.entries().region(server).summonerId(sd.id).exec().then((data) => callback(null, data)),
             mastery: (callback) => galeforce.lol.mastery.list().region(server).summonerId(sd.id).exec().then((data) => callback(null, data)),
-            matchlist: (callback) => galeforce.lol.match.list().region(server).accountId(sd.accountId).query({ endIndex: queryLimit || 100 }).exec().then((data) => callback(null, data)),      
+            matchlist: (callback) => galeforce.lol.match.list().region(LeagueToRiotRegion[server]).puuid(sd.puuid).query({ endIndex: queryLimit || 100 }).exec().then((data) => callback(null, data)),      
         }, async (err, data) => {
             metricsModel.insertMany([
                 { endpoint: 'league', time: Date.now() },
@@ -160,14 +166,14 @@ app.get('/api/update', async (request, response) => {
 
             await summonerModel.findOneAndUpdate(summonerQuery, data, options).exec();
 
-            await async.each(data.matchlist.matches, async (match) => {
-                const matchQuery = { gameId: match.gameId }; // select by match ID
+            await async.each(data.matchlist, async (match) => {
+                const matchQuery = { gameId: match }; // select by match ID
                 const exists = (await matchModel.findOne(matchQuery, { _id: 1 })) !== null; // Don't re-upsert already upserted matches
                 if (!exists) {
                     metricsModel.create({ endpoint: 'match', time: Date.now() });
                     const matchData = await galeforce.lol.match.match()
-                        .region(match.platformId.toLowerCase())
-                        .matchId(match.gameId)
+                        .region(LeagueToRiotRegion[match.split('_')[0].toLowerCase()])
+                        .matchId(match)
                         .exec();
                     await matchModel.findOneAndUpdate(matchQuery, matchData, options).exec();
                 }
@@ -389,24 +395,24 @@ app.get('/api/social/frequent', async (request, response) => {
     }).exec();
 
     const matchData = await matchModel.find({
-        'participantIdentities.player.accountId': summonerData[0].summoner.accountId,
+        'metadata.participants': summonerData[0].summoner.puuid,
         queueId: { $nin: [800, 810, 820, 830, 840, 850] }, // exclude bot games
-    }, ['participantIdentities.player.summonerName', 'participantIdentities.player.accountId'].join(' ')).exec();
+    }, ['info.participants.summonerName', 'info.participants.puuid'].join(' ')).exec();
 
-    const participantByMatch = matchData.map((match) => match.participantIdentities).flat().map((participant) => participant.player);
+    const participantByMatch = matchData.map((match) => match.info.participants).flat();
 
-    const frequencies = _.countBy(participantByMatch.map((player) => player.accountId));
+    const frequencies = _.countBy(participantByMatch.map((player) => player.puuid));
 
     const frequents = Object.keys(_.pickBy(frequencies, (value) => value >= parseInt(process.env.MIN_GAMES, 10)));
 
     response.status(200).json({
         nodes: frequents.map((key) => ({
             id: key,
-            name: participantByMatch.find((player) => player.accountId === key).summonerName,
+            name: participantByMatch.find((player) => player.puuid === key).summonerName,
             server: summonerData[0].summoner.server,
         })),
         links: frequents.map((key) => ({
-            source: summonerData[0].summoner.accountId,
+            source: summonerData[0].summoner.puuid,
             target: key,
             games: frequencies[key],
         })),

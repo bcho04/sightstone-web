@@ -184,14 +184,14 @@ input[type="text"], textarea {
 }
 
 .mastery-panel-lg {
-    max-height: calc(85vh - 47px);
+    max-height: calc(100vh - 150px);
     margin-top: 10px;
     margin-bottom: 10px;
     overflow: scroll;
 }
 
 .ranked-panel-lg {
-    max-height: calc(85vh - 47px);
+    max-height: calc(100vh - 150px);
     margin-top: 10px;
     margin-bottom: 10px;
     overflow: scroll;

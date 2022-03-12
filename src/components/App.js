@@ -68,7 +68,7 @@ class App extends React.Component {
                 <div id="footer" className="small-font footer">
                     <footer>
                         <div className="container">
-                            <p>©&nbsp;<a href="https://github.com/bcho04">Brandon Cho</a> 2020-2021. All rights reserved.</p>
+                            <p>©&nbsp;<a href="https://github.com/bcho04">Brandon Cho</a> 2020-2022. All rights reserved.</p>
                             <hr></hr>
                             <p>Sightstone isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing<br></br>
                             League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.<br></br></p>

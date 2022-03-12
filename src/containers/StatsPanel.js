@@ -29,8 +29,8 @@ const mapStateToProps = (state) => {
         sincePlayedString = `${years.toString()} year${years > 1 ? 's' : ''} ago`;
     }
 
-    const totalPoints = Object.values(state.info.ranking).map((item) => item.points).reduce((prev, next) => prev + next, 0);
-    const masteryScore = Object.values(state.info.ranking).map((item) => item.level).reduce((prev, next) => prev + next, 0);
+    const totalPoints = Object.values(state.info.summoner.mastery || {}).map((item) => item.championPoints).reduce((prev, next) => prev + next, 0);
+    const masteryScore = Object.values(state.info.summoner.mastery || {}).map((item) => item.championLevel).reduce((prev, next) => prev + next, 0);
     const soloRankObj = state.info.summoner.league?.find((rank) => rank.queueType === 'RANKED_SOLO_5x5');
     const soloRank = typeof soloRankObj !== 'undefined' ? `${soloRankObj.tier} ${soloRankObj.rank} ${soloRankObj.leaguePoints.toString()}LP` : 'unranked';
 

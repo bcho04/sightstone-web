@@ -60,7 +60,7 @@ class MasteryPanel extends React.Component {
                                 {championPanelList}
                             </ListGroup>
                         </Col>
-                        <Col xs={10}>
+                        <Col xs={10} className="mastery-panel-lg">
                             <Tab.Content>
                                 {championTabContent}
                             </Tab.Content>
