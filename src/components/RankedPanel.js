@@ -50,7 +50,7 @@ class RankedPanel extends React.Component {
                                 </ListGroup.Item>
                             </ListGroup>
                         </Col>
-                        <Col xs={10}>
+                        <Col xs={10} className="ranked-panel-lg">
                             <Tab.Content>
                                 <Tab.Pane active={this.state.view === 'solo'} unmountOnExit={true} className={this.props.className}>
                                     <DistributionChart
