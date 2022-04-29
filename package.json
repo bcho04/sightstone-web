@@ -6,7 +6,7 @@
   "main": "/src/app/index.js",
   "dependencies": {
     "@babel/runtime": "^7.14.6",
-    "async": "^3.2.0",
+    "async": "^3.2.2",
     "bluebird": "^3.7.2",
     "bootstrap": "^5.0.2",
     "chart.js": "^3.3.2",
